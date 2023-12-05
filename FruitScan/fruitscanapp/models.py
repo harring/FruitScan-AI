@@ -38,6 +38,8 @@ class ModelWeights(models.Model):
     version = models.CharField(max_length=5)
     path = models.FileField(upload_to='ModelWeights/')
     confusion_matrix = models.ImageField(upload_to='Performance/ConfusionMatrix/')
+    train_accuracy = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    val_accuracy = models.DecimalField(max_digits=10, decimal_places=3, default=0)
     test_set_accuracy = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
 class ImageData(models.Model):
