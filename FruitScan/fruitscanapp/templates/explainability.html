@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+Display result
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid bg-user-color text-center full-height">
+        <div class="button-container-top">
+            <button id="PredMyPage"class="btn btn-outline-primary me-md-3 mt-2">My page</button>
+            <button id="PredLogOut"class="btn btn-outline-primary me-md-3 mt-2">Logout</button>
+        </div>
+    </div> 
+
+
+<style>
+.button-container-top {
+    text-align: center; 
+    padding-left: 50px; 
+    padding-right: 0px;
+}
+
+.button-container-top .btn.btn-outline-primary {
+    width: 140px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container-top .btn.btn-outline-primary:hover {
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+</style>
+
+{% endblock %}
