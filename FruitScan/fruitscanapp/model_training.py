@@ -102,13 +102,20 @@ def train_model():
     # Compile model
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    # Train model
-    model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val))
+    # Train model and save accuracy for different epochs
+    history = model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val))
+
+    # get training and validation accuracy values from the last epoch
+    training_accuracy = history.history['accuracy'][-1]
+    validation_accuracy = history.history['val_accuracy'][-1]
+    #Convert to decimal values to fit db model
+    training_accuracy_float = float(training_accuracy)
+    validation_accuracy_float = float(validation_accuracy)
 
     # Save model to file
     model_version = save_model(model)
 
- # Use the validation set on the confusion matrix
+    # Use the validation set on the confusion matrix
     y_val_pred = model.predict(X_val)
     y_val_pred_classes = np.argmax(y_val_pred, axis=1)
 
@@ -154,6 +161,6 @@ def train_model():
     model_path = f"ModelWeights/fruitscan_model_weights_v{model_version}.h5"
     confusion_matrix_path = f"Performance/ConfusionMatrix/confusion_matrix_v{model_version}.png"
 
-    new_db_entry = ModelWeights(version=model_version, path=model_path, confusion_matrix=confusion_matrix_path)
+    new_db_entry = ModelWeights(version=model_version, path=model_path, confusion_matrix=confusion_matrix_path, train_accuracy= training_accuracy_float, val_accuracy=validation_accuracy_float)
     new_db_entry.save()
     print(f'Model {model_version} added to database.')
