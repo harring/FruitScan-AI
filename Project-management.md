@@ -33,3 +33,24 @@
 |Turn uploaded image into data|Particia|Yes|Yes|Convert image loaded into same resolution used in the model.|
 |Integrate model with django|Particia|Yes|Yes|Load model to django and make prediction. Display the result in the diaplay_page, which will need to be changed later on|
 |Save and load only weights instead of full model (keras file)|Particia|Yes|Yes|Change way of saving model to save only weights. Load only weights file (.h5) into django. Create a model architecture in django to be used with the weights for prediction.|
+
+| Week 4 (Week 48)                       |                     |              |              |                    |
+|----------------------------------------|---------------------|--------------|--------------|--------------------|
+|                                        | Who was responsible |  Delivered   |  Integrated  |  Notes             |
+| Create user model | Mijin               | Yes          | Yes          | -                  |
+| User registration and login functionality | Mijin               | Yes          | Yes          | -                  |
+| Front-end development in user-related pages | Mijin               | Yes          | Yes          | -                  |
+| Save and display user prediction history | Mijin               | Yes          | Yes          | -                  |
+| Recreate database | Mijin               | Yes          | Yes          | -                  |
+| Move Dataset to Database | Erik, Jonathan | Yes | Yes | Stores the images used for training in the database as binary |
+| Trained models get confusion matrix | Erik, Jonathan | Yes | Yes | Each new model trained will automatically get a confusion matrix generated. |
+| Add/remove/update datasets from admin panel | Erik, Jonathan | Yes | Yes | Admins can change/update the datasets used for training and testing |
+| Admin can deploy chosen version | Erik, Jonathan | Yes | Yes | Admins can change which version of the model is deployed(used by users when predicting)  |
+| Admin get model evaluation | Erik, Jonathan | Yes | Yes | Admins can get performance data on chosen model |
+| Admin panel design and error handling | Erik, Jonathan | Yes | Yes | Various improvements to the admin panel |
+| Remove title from uploaded image | Patricia | Yes | Yes | Change the model and the form so we sabe only the image in the database. |
+| Django user panel | Patricia | Yes | Yes | Modified the front-end to match the mock-up sketch |
+| Delete uploaded image after prediction if not logged in | Patricia | Yes | Yes | Delete the image from the database and the media folder. Created a code that clean all the images from the database as well.|
+| Resize uploaded image to same size to display in the prediction page | Patricia | Yes | Yes | |
+| Add fruit nutritional information | Patricia | Yes | Yes |  |
+| Improvements on user GUI | Patricia | Yes | Yes | Add style to all front-end pages, background, logo.|| 
