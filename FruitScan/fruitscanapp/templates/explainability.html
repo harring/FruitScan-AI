@@ -6,11 +6,15 @@ Display result
 {% block content %}
     <div class="container-fluid bg-user-color text-center full-height">
         <div class="button-container-top">
-            <button id="PredMyPage"class="btn btn-outline-primary me-md-3 mt-2">My page</button>
-            <button id="PredLogOut"class="btn btn-outline-primary me-md-3 mt-2">Logout</button>
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary me-md-3 mt-2">My page</button>
+            <a href="{% url 'user_logout' %}" class="btn btn-outline-primary me-md-3 mt-2">Logout</button>
+            <a href="{% url 'home' %}" class="btn btn-outline-primary me-md-3 mt-2">Home</a>
         </div>
+        <img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image"/>
+        {% for label, confidence in sorted_labels %}
+            <p> {{ label }}, {{ confidence }} </p>
+        {% endfor %}
     </div> 
-
 
 <style>
 .button-container-top {

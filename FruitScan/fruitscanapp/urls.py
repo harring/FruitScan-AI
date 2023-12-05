@@ -19,5 +19,6 @@ urlpatterns = [
     path('train_model_view/', views.train_model_view, name='train_model_view'),
     path('deploy_selected', views.deploy_selected, name='deploy_selected'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('test_deployed_model',views.test_deployed_model, name='test_deployed_model')
+    path('test_deployed_model',views.test_deployed_model, name='test_deployed_model'),
+    path('explain', views.explainability, name='explainability'),
     ]

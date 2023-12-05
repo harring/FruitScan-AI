@@ -39,12 +39,15 @@ import lime
 from lime import lime_image
 from lime import submodular_pick
 from skimage.segmentation import mark_boundaries
+from skimage.color import label2rgb
 
 deployed_model_version = '1'
 width = 256
 height = 256
 channels = 3
 num_classes = 4
+processed_image = None
+prediction = None
 
 # Create model architecture
 model = Sequential([
@@ -139,6 +142,7 @@ def image_to_base64(img):
 
 # Function that runs the prediction
 def classify_image(uploaded_image):
+    global processed_image, prediction
     processed_image = preprocess_image(uploaded_image)
     
     # Reshape processed image
@@ -152,14 +156,6 @@ def classify_image(uploaded_image):
     # Make prediction
     prediction = model.predict(image)
 
-    # Pair each label with its corresponding prediction confidence
-    label_with_confidence = list(zip(class_labels, prediction[0]))
-    
-    sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
-    
-    for label, confidence in sorted_labels:
-        print(f"{label}: {confidence}")
-
     # Debug to see the output for prediction
     print("Prediction:", prediction)
     predicted_class_index = np.argmax(prediction, axis=1)
@@ -168,13 +164,34 @@ def classify_image(uploaded_image):
     predicted_class_label = class_labels[predicted_class_index[0]]
     fruit_nutritional_info = nutritional_info[predicted_class_label]
     
-    print(image.shape)
+    return predicted_class_label, fruit_nutritional_info
+
+def explainability(request):
+    # Pair each label with its corresponding prediction confidence
+    label_with_confidence = list(zip(class_labels, prediction[0]))
+    
+    sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
+   
+    print(processed_image.shape)
     explainer = lime_image.LimeImageExplainer()
-    squeezed_image = np.squeeze(image)
-    exp = explainer.explain_instance(squeezed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
+    #squeezed_image = np.squeeze(image)
+    exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
     print(exp.segments)
     
-    return predicted_class_label, fruit_nutritional_info
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
+    img_with_mask = label2rgb(mask, processed_image, bg_label=0)
+    fig, ax = plt.subplots()
+    ax.imshow(img_with_mask)
+    ax.axis('off')
+    # Save the plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    # Convert buffer contents to base64
+    img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    
+    return render(request, 'explainability.html', {'img_base64': img_base64, 'sorted_labels': sorted_labels})
 
 # This function can be used to display the history of the images uploaded by the user. But it should to be modified.
 def display_all_uploaded_image(request):
