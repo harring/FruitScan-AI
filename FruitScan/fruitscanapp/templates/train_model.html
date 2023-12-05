@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train model</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <button type="button" id="trainModelButton">Train New Model</button>
+
+    <script>
+        $(document).ready(function() {
+            $("#trainModelButton").click(function() {
+                $.ajax({
+                    url: 'train-model/',
+                    type: 'get',
+                    success: function(response) {
+                        // Handle the response here
+                        alert("Model training started!");
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

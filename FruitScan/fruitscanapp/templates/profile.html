@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid bg-user-color text-center full-height">  
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <div class="button-container">
+      <button type="login" id="redirectButton2" class="btn btn-outline-primary mt-2 mypage-button-position">Logout</button>
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      
+      <div class="col-sm-6" id="user-profile" style="background-color: rgb(243, 240, 240);">
+        <h2>My Profile</h2><br>
+        <p>My username: {{ user.username }}</p>
+        <p>My email: {{ user.email }}</p>
+      </div>
+      <div class="col-sm-3"></div>
+    </div>
+    <div class="row">
+      <br><br>
+    </div>
+    <div class="row">
+      <div class="col-sm-3" id="my-prediction"></div>
+      <div class="col-sm-6" style="background-color: rgb(243, 240, 240);">
+        <h2>My Prediction History</h2>
+        {% if user_images %}
+        <table class="table" id="pred_hist">
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>My picture</th>
+                  <th>Prediction</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for user_image in user_images %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td><img src="{{ user_image.image.url }}" alt="User Image"></td>
+                      <td>{{ user_image.pred }}</td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p>No images found for this user.</p>
+        {% endif %}
+      </div>
+      <div class="col-sm-3"></div>
+    </div>
+  </div>
+
+  <style>
+  .button-container {
+      text-align: center; 
+      padding-left: 0px; 
+      padding-right: 50px;
+  }
+  
+  .button-container .btn.btn-outline-primary {
+      width: 140px;
+      background-color: white;
+      color: black; 
+      border-color: black; 
+      /*font-family: "Sofia", sans-serif;*/
+  }
+  
+  /* Hover state styling */
+  .button-container .btn.btn-outline-primary:hover {
+      color: black; 
+      background-color: #FFD700; 
+      border-color: black; 
+      font-weight: bold;
+      /*font-family: "Sofia", sans-serif;*/
+  }
+
+  .mypage-button-position {
+    position: relative;
+    left: 40px; 
+}
+</style>
+
+  <script>
+    document.getElementById("redirectButton2").addEventListener("click", function() {
+        // Redirect to a specific page
+        window.location.href = "{% url 'user_logout' %}";
+    });
+</script>
+
+  {% endblock %}

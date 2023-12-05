@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block title %}
+Display result
+{% endblock %}
+
+{% block content %}
+{% load static %}
+    <div class="container-fluid bg-user-color text-center full-height"> 
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            {% if is_user_logged_in %}
+            <div class="button-container-top">
+                <button id="PredMyPage"class="btn btn-outline-primary me-md-3 mt-2">My page</button>
+                <button id="PredLogOut"class="btn btn-outline-primary me-md-3 mt-2">Logout</button>
+            </div>
+            <script>
+                document.getElementById("PredMyPage").addEventListener("click", function() {
+                    window.location.href = "{% url 'profile' %}";
+                });
+            
+                document.getElementById("PredLogOut").addEventListener("click", function() {
+                    window.location.href = "{% url 'user_logout' %}";
+                });
+            </script>
+            {% endif %}
+        </div>   
+        <div class="row">
+            <div class="col-sm-5 container-1">
+                <h2 class="result-text">Result :</h2>   
+                </br>
+                {% if base64_image %}
+                    <div class="image-container">
+                        <img src="data:image/jpeg;base64,{{ base64_image }}" class="rounded"/>
+                    </div>
+                {% else %}
+                    <p>No images have been uploaded yet.</p>
+                {% endif %}
+                </br>
+                <div>
+                    {% if result %}
+                    <p class="p-class">The uploaded image is a: <span style="text-decoration: underline; font-style: italic;">{{ result }}</span></p>
+                    {% else %}
+                        <p class="p-class">Unable to classify the image.</p>
+                    {% endif %}
+                </div>
+                <div class="button-container">
+                    <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg">Upload another image</a>
+                </div>
+            </div>
+            <div class="col-sm-7 container-2">
+                <div class="col-sm-12" style="background-color: rgba(250, 240, 230, 0.5);">
+                    <h3>Nutritional Information for {{ result }}<br>
+                        <h4>Serving size 100g</h4></h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nutrient</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for nutrient, value in nutritional_info.items %}
+                            <tr>
+                                <td>{{ nutrient }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>    
+        </div>
+    </div>    
+
+<style>
+
+body {
+    background-image: url('{% static "images/" %}{{ result }}.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.result-text {
+    font-family: "Sofia", sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.p-class {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+    
+.container-2 {
+    padding-top: 120px;
+    padding-bottom: 20px;
+    padding-right: 90px;
+    padding-left: 330px;
+
+}
+    
+.btn btn-primary btn-lg {
+    font-size: 1.5em;
+}
+    
+.container-1 {
+    padding-top: 90px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+}
+
+.uploaded-image {
+    max-width: 100%; 
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensures proper block-level layout */
+    margin: 0 auto;
+}
+
+.image-container img {
+    width: 250px;     
+    height: 250px;    
+    object-fit: contain;
+}
+
+.button-container {
+    text-align: center; 
+    padding-top: 20px;
+    padding-left: 70px; 
+    padding-right: 60px;
+}
+
+.button-container .btn.btn-outline-primary {
+    width: 250px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container .btn.btn-outline-primary:hover {
+    width: 250px;
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+.button-container-top {
+    text-align: center; 
+    padding-left: 50px; 
+    padding-right: 0px;
+}
+
+.button-container-top .btn.btn-outline-primary {
+    width: 140px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container-top .btn.btn-outline-primary:hover {
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+</style>
+
+
+
+{% endblock %}
+

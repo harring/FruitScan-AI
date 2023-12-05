@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+    <div class="container-fluid bg-user-color text-center full-height">  
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="button-container">
+                <button type="login" class="btn btn-outline-primary mt-2 button-position">Admin Log In</button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 container-2">
+                <h3 class="log-in-text">Log In</h3><br>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="button-container">
+                        <button type="login" id="homeLoginBtn" class="btn btn-outline-primary btn-lg mt-2 button-position">Log In</button>
+                    </div>
+                </form>
+                <br>
+                <a href="{% url 'register' %}" class="register-link-position">Don't have account? Register here</a>
+            </div>
+        </div>
+    </div>
+
+<style>   
+
+body {
+    background-image: url('{% static 'images/minimalist.jpg' %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.log-in-text {
+    font-family: "Sofia", sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+}
+    
+.btn btn-outline-primary btn-lg {
+    font-size: 2em;
+}
+
+.button-container {
+    text-align: center; 
+    padding-left: 0px; 
+    padding-right: 50px;
+}
+
+.button-container .btn.btn-outline-primary {
+    width: 140px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container .btn.btn-outline-primary:hover {
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+.button-position {
+    position: relative;
+    left: 40px; 
+}
+
+
+.register-link-position {
+    position: relative;
+    left: 10px;
+}
+
+.container-2 {
+    padding-top: 40px;
+    padding-bottom: 200px;
+    padding-right: 90px;
+    padding-left: 150px;
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid bg-user-color text-center full-height">  
+    <div class="row justify-content-center">
+        <div class="col-12 container-2">
+            <h2 class="register-text">Register your account</h2><br>
+            <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="username-group">
+                    <label for="{{ form.username.id_for_label }}">Username:</label>
+                    {{ form.username }}
+                </div>
+            
+                <div class="email-group"><br>
+                    <label for="{{ form.email.id_for_label }}">Email:</label>
+                    {{ form.email }}
+                </div>
+            
+                <div class="password-group"><br>
+                    <label for="{{ form.password1.id_for_label }}">Password:</label>
+                    {{ form.password1 }}
+                    <br><small class="form-text text-muted">
+                        * Password must be at least 8 characters long <br>
+                        and contain at least one uppercase letter, one lowercase letter, and one digit.
+                    </small>
+                </div>
+            
+                <div class="password2-group"><br>
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                    {{ form.password2 }}
+                <br></div>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-outline-primary btn-lg mb-3 mt-5">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+
+body {
+    background-color: #FFF5EE
+}
+
+.username-group {
+    text-align: center; 
+    /*padding-left: 90px; 
+    padding-right: 90px;*/
+}
+
+.email-group {
+    text-align: center; 
+    padding-left: 50px; 
+    padding-right: 17px;
+}
+
+.password-group {
+    text-align: center; 
+    padding-left: 90px; 
+    padding-right: 85px;
+}
+
+.password2-group {
+    text-align: center; 
+    padding-left: 0px; 
+    padding-right: 50px;
+}
+
+.register-text {
+    font-family: "Sofia", sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.container-2 {
+    padding-top: 40px;
+    padding-bottom: 200px;
+    padding-right: 80px;
+    padding-left: 150px;
+}
+
+.button-container {
+    text-align: center; 
+    padding-left: 28px;
+    padding-right: 0px;
+}
+
+.button-container .btn.btn-outline-primary {
+    width: 140px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container .btn.btn-outline-primary:hover {
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+</style>
+
+{% endblock %}
