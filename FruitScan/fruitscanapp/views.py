@@ -378,10 +378,10 @@ def update_model(version):
     deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{version}.h5"
     weights_path = os.path.join(BASE_DIR, deployed_weights_path)
     model.load_weights(weights_path)
-
+    
 def test_deployed_model(request):
-
-    deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
+    tested_version = request.POST.get('test_version')
+    deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{tested_version}.h5"
     weights_path = os.path.join(BASE_DIR, deployed_weights_path)
     model.load_weights(weights_path)
     test_images = TestImageData.objects.all()
@@ -411,14 +411,14 @@ def test_deployed_model(request):
         y_pred.append(predicted_class_index[0])
 
     accuracy = accuracy_score(y_true, y_pred)
-    report = classification_report(y_true, y_pred, labels=[0, 1, 2, 3], target_names=['Label 0', 'Label 1', 'Label 2', 'Label 3'])
-
+    updated_model = ModelWeights.objects.get(version=tested_version)
+    updated_model.test_set_accuracy = accuracy
+    updated_model.save()
     print(accuracy)
-    print(report)
 
     return HttpResponse("""
     <script>
         alert('Success');
         window.location.href='/admin_view';
     </script>
-    """) 
+    """)  
