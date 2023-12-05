@@ -33,6 +33,12 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from sklearn.metrics import classification_report, accuracy_score
 
+import matplotlib.pyplot as plt
+import matplotlib.cm as c_map
+import lime
+from lime import lime_image
+from lime import submodular_pick
+from skimage.segmentation import mark_boundaries
 
 deployed_model_version = '1'
 width = 256
@@ -51,11 +57,6 @@ model = Sequential([
     #Dropout(0.5),
     Dense(num_classes, activation='softmax')
 ])
-
-# Load the Keras model
-# deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
-# weights_path = os.path.join(BASE_DIR, deployed_weights_path)
-# model.load_weights(weights_path)
 
 # Classification table for the model output
 class_labels = ['Kiwi', 'Banana', 'Mango', 'Tomato']
@@ -143,12 +144,21 @@ def classify_image(uploaded_image):
     # Reshape processed image
     image = np.expand_dims(processed_image, axis=0)
     
+    # Load the model
     deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
     weights_path = os.path.join(BASE_DIR, deployed_weights_path)
     model.load_weights(weights_path)
     
     # Make prediction
     prediction = model.predict(image)
+
+    # Pair each label with its corresponding prediction confidence
+    label_with_confidence = list(zip(class_labels, prediction[0]))
+    
+    sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
+    
+    for label, confidence in sorted_labels:
+        print(f"{label}: {confidence}")
 
     # Debug to see the output for prediction
     print("Prediction:", prediction)
@@ -157,6 +167,12 @@ def classify_image(uploaded_image):
     # Convert this index to a label 
     predicted_class_label = class_labels[predicted_class_index[0]]
     fruit_nutritional_info = nutritional_info[predicted_class_label]
+    
+    print(image.shape)
+    explainer = lime_image.LimeImageExplainer()
+    squeezed_image = np.squeeze(image)
+    exp = explainer.explain_instance(squeezed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
+    print(exp.segments)
     
     return predicted_class_label, fruit_nutritional_info
 
