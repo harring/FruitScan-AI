@@ -1,65 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Panel</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <style>
+            .container-top-margin {
+                margin-top: 20px;
+            }
+                .all-models-top-margin {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Left Side of screen in this div class-->
-        <div class="col-md-6">
-            <h3>Upload new batch of data</h3>
+    <div class="container-fluid container-top-margin">
+        <div class="row">
+        <!-- Top Left: File Upload and Related Actions -->
+        <div class="col-md-4">
+            <h4 4 style="font-weight: bold">Upload new batch of training data</h4>
             <p>Currently {{ fruitscanapp_imagedata_count }} images in the database.</p>
             <form method="post" action="/upload_zip" enctype="multipart/form-data">
                 <!--Checks for malicious files when uploading-->
                 {% csrf_token %}
                 <input type="file" name="zip_file" accept=".zip" required>
                 <br>
-                <button type="submit" class="mt-3">Upload to dataset</button>
+                <button type="submit" class="mt-3 mb-3">Upload to dataset</button>
             </form>
             <form action="{% url 'delete_all_images' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="mt-3">Delete All Images</button>
+                <button type="submit" class="mt-3 mb-3">Delete All Images</button>
             </form>
+            <h4 4 style="font-weight: bold">Upload new batch of test data</h4>
 
+            <p>Currently {{ fruitscanapp_test_image_count }} images in the test set.</p>
+            <form method="post" action="/upload_test_set" enctype="multipart/form-data">
+                <!--Checks for malicious files when uploading-->
+                {% csrf_token %}
+                <input type="file" name="zip_file" accept=".zip" required>
+                <br>
+                <button type="submit" class="mt-3">Upload test set</button>
+            </form>
+            <form action="{% url 'delete_test_set' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="mt-3">Delete All Test Images</button>
+            </form>
+            <button type="button" class="mt-3">
+                <a href="/train_model">Retrain</a>
+            </button>  
+        </div>
+
+        <!-- Top Middle: Currently Deployed Model and Logout -->
+        <div class="col-md-4 text-center">
+            <h4 style="font-weight: bold" class="mb-3">Currently Deployed Model: {{ model_version }}</h4>
+            <!-- Logout Button -->
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <!-- Top Right: Model Selection and Deployment -->
+        <div class="col-md-4">
+            <h4 style="font-weight: bold">Select and Deploy Model:</h4>
             <form method="post" action="/deploy_selected" enctype="multipart/form-data">
                 {% csrf_token %}             
-                <h6 style="font-weight: bold">Select Model:</h6>
-                <select name="selected_version" required class="mb-3 ">
+                <h6>Select Model:</h6>
+                <select name="selected_version" required>
                     <option value='1'>Reset to 1</option>
                     {% for weight in weights %}
                     <option value="{{ weight.version }}">{{ weight.version }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" name="deploy_selected" value="deploy_selected" class="mt-3">Deploy selected model</button>
                 <br>
-                <button type="submit" class="mb-3">Test Current Model</button>
+                <button type="submit" name="deploy_selected" value="deploy_selected" class="mt-3 mb-3">Deploy selected model</button>
             </form>
-            
-            <form action="{% url 'train_model_view' %}" method="post">
-                {% csrf_token %}
-                {% if fruitscanapp_imagedata_count > 100 %}
-                    <button type="submit" class="btn btn-primary">Retrain</button>
-                {% else %}
-                    <button type="submit" class="btn btn-primary" disabled>Retrain</button>
-                {% endif %}
+
+            <h4 style="font-weight: bold">Test model:</h4>
+            <form method="post" action="/test_deployed_model" enctype="multipart/form-data">
+                {% csrf_token %}             
+                <h6>Select Model:</h6>
+                <select name="test_version" required>
+                    <option value='1'>Version 1</option>
+                    {% for weight in weights %}
+                    <option value="{{ weight.version }}">{{ weight.version }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <br>
+                <button type="submit" name="test_deployed_model" value="test_deployed_model" class="mt-3">Test Current Model</button>
             </form>
         </div>
+    </div>
 
-        <!-- Right Side of screen in this div class -->
-        <div class="col-md-6">
-            <h6 style="font-weight: bold">Currently Deployed Model: {{ model_version }}</h6>
-        </br>
-            <h6 style="font-weight: bold">All models:</h6>
-             <!-- TODO - See if this is the best way to display models and load from DB -->
+    <!-- Full Width: Table of All Models -->
+    <div class="row all-models-top-margin">
+        <div class="col-md-12">
+            <h4 style="font-weight: bold">All models:</h4>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Model Version:</th>
+                        <th>Test Set Accuracy:</th>
                         <th>Confusion Matrix:</th>
                     </tr>
                 </thead>
@@ -69,16 +110,12 @@
                             <td>
                                 {{ weight.version }}
                             </td>
+                            <td>{{ weight.test_set_accuracy}}</td>
                             <td><a href={{ weight.confusion_matrix.url }}>Link</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
         </div>
     </div>
 </div>

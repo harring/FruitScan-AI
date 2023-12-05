@@ -1,5 +1,6 @@
 # Model imports for your app
-from .models import FruitClassification, MLWeights, UploadedImage, ModelWeights, CustomUser,UserImage, ImageData
+import io
+from .models import FruitClassification, MLWeights, TestImageData, UploadedImage, ModelWeights, CustomUser,UserImage, ImageData
 from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
@@ -7,12 +8,15 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from .forms import ImageForm, RegistrationForm, ImageForm
 from django.conf import settings
+
 # Image processing
 from PIL import Image
 import numpy as np
+
 # Standard library imports
 import os
 import zipfile
+
 # TensorFlow and Keras for model architecture and processing
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
@@ -27,6 +31,8 @@ from django.views.decorators.http import require_POST
 import base64
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from sklearn.metrics import classification_report, accuracy_score
+
 
 deployed_model_version = '1'
 width = 256
@@ -47,9 +53,9 @@ model = Sequential([
 ])
 
 # Load the Keras model
-deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
-weights_path = os.path.join(BASE_DIR, deployed_weights_path)
-model.load_weights(weights_path)
+# deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
+# weights_path = os.path.join(BASE_DIR, deployed_weights_path)
+# model.load_weights(weights_path)
 
 # Classification table for the model output
 class_labels = ['Kiwi', 'Banana', 'Mango', 'Tomato']
@@ -103,10 +109,12 @@ def adminPanel(request):
     weights = ModelWeights.objects.all()
     model_version = deployed_model_version
     fruitscanapp_imagedata_count = ImageData.objects.count()
+    fruitscanapp_test_image_count = TestImageData.objects.count()
     print(deployed_model_version)
     return render(request, 'admin_view.html', {'weights': weights, 
                                                'model_version': model_version,
-                                               'fruitscanapp_imagedata_count': fruitscanapp_imagedata_count})
+                                               'fruitscanapp_imagedata_count': fruitscanapp_imagedata_count,
+                                               'fruitscanapp_test_image_count': fruitscanapp_test_image_count})
 
 class CustomAdminLoginView(LoginView):
     def get_success_url(self, request):
@@ -167,6 +175,15 @@ def train_model_view(request):
         </script>
     """)
 
+def get_image_format(file_name):
+    """Get the image format based on file extension."""
+    if file_name.lower().endswith('.jpg') or file_name.lower().endswith('.jpeg'):
+        return 'JPEG'
+    elif file_name.lower().endswith('.png'):
+        return 'PNG'
+    else:
+        return None  # or raise an error if non-supported format
+
 # For user registration
 def register(request):
     if request.method == 'POST':
@@ -202,7 +219,7 @@ def upload_zip(request):
         uploaded_file = request.FILES['zip_file']
         
         if uploaded_file.name.endswith('.zip'):
-            destination_path = os.path.join(BASE_DIR, 'Dataset/')
+            destination_path = os.path.join(BASE_DIR, 'Dataset/')  # Make sure BASE_DIR is defined
             
             if not os.path.exists(destination_path):
                 os.makedirs(destination_path)
@@ -212,10 +229,7 @@ def upload_zip(request):
                     destination.write(chunk)
             
             with zipfile.ZipFile(os.path.join(destination_path, uploaded_file.name), 'r') as zip_ref:
-                for file in zip_ref.namelist():
-                    # Filter out __MACOSX entries
-                    if '__MACOSX' not in file:
-                        zip_ref.extract(file, destination_path)
+                zip_ref.extractall(destination_path)
             
             os.remove(os.path.join(destination_path, uploaded_file.name))
             
@@ -230,10 +244,22 @@ def upload_zip(request):
                         file_path = os.path.join(root, file)
                         
                         if file.endswith(('.jpg', '.jpeg', '.png')):
-                            with open(file_path, 'rb') as img_file:
-                                image_data = img_file.read()
+                            with Image.open(file_path) as img:
+                                # Resize the image
+                                img = img.resize((256, 256), Image.Resampling.LANCZOS)
                                 
-                                image_instance = ImageData(label=label, image_data=image_data)
+                                # Determine the image format
+                                image_format = get_image_format(file)
+                                if image_format is None:
+                                    continue  # Skip unsupported formats
+
+                                # Save the image to a byte buffer
+                                img_byte_arr = io.BytesIO()
+                                img.save(img_byte_arr, format=image_format)
+                                img_byte_arr = img_byte_arr.getvalue()
+
+                                # Create an ImageData instance and save to DB
+                                image_instance = ImageData(label=label, image_data=img_byte_arr)
                                 image_instance.save()
 
                             os.remove(file_path)
@@ -241,6 +267,63 @@ def upload_zip(request):
             return HttpResponse("""
                 <script>
                     alert('Files uploaded successfully!!');
+                    window.location.href='/admin_view';
+                </script>
+            """)
+
+def upload_test_set(request):
+    if request.method == 'POST' and request.FILES['zip_file']:
+        uploaded_file = request.FILES['zip_file']
+        
+        if uploaded_file.name.endswith('.zip'):
+            destination_path = os.path.join(BASE_DIR, 'Dataset/')  # Make sure BASE_DIR is defined
+            
+            if not os.path.exists(destination_path):
+                os.makedirs(destination_path)
+            
+            with open(os.path.join(destination_path, uploaded_file.name), 'wb+') as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
+            
+            with zipfile.ZipFile(os.path.join(destination_path, uploaded_file.name), 'r') as zip_ref:
+                zip_ref.extractall(destination_path)
+            
+            os.remove(os.path.join(destination_path, uploaded_file.name))
+            
+            extracted_folders = [f for f in os.listdir(destination_path) if os.path.isdir(os.path.join(destination_path, f))]
+            
+            for folder in extracted_folders:
+                folder_path = os.path.join(destination_path, folder)
+                label = folder
+                
+                for root, dirs, files in os.walk(folder_path):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        
+                        if file.endswith(('.jpg', '.jpeg', '.png')):
+                            with Image.open(file_path) as img:
+                                # Resize the image
+                                img = img.resize((256, 256), Image.Resampling.LANCZOS)
+                                
+                                # Determine the image format
+                                image_format = get_image_format(file)
+                                if image_format is None:
+                                    continue  # Skip unsupported formats
+
+                                # Save the image to a byte buffer
+                                img_byte_arr = io.BytesIO()
+                                img.save(img_byte_arr, format=image_format)
+                                img_byte_arr = img_byte_arr.getvalue()
+
+                                # Create an ImageData instance and save to DB
+                                image_instance = TestImageData(label=label, image_data=img_byte_arr)
+                                image_instance.save()
+
+                            os.remove(file_path)
+            
+            return HttpResponse("""
+                <script>
+                    alert('Test set uploaded successfully!!');
                     window.location.href='/admin_view';
                 </script>
             """)
@@ -255,25 +338,34 @@ def delete_all_images(request):
         </script>
     """)
 
+def delete_test_set(request):
+     # Delete all entries in the TestImageData table
+    TestImageData.objects.all().delete()
+    return HttpResponse("""
+        <script>
+            alert('All image data in the test set has been deleted.');
+            window.location.href='/admin_view';
+        </script>
+    """)
 
 def deploy_selected(request):
     global deployed_model_version
 
     if request.method == 'POST':
         if 'deploy_selected' in request.POST:
+            print("request")
+            print(request.POST.get('selected_version'))
             deployed_version = request.POST.get('selected_version')
-
-            # Update model version and reload model weights
+            # Update the global variable
             deployed_model_version = deployed_version
-            update_model(deployed_model_version)
-
+            # Redirect or render a response
             return HttpResponse("""
                 <script>
                     alert('Selected model has been deployed.');
                     window.location.href='/admin_view';
                 </script>
             """)
-
+    
     return HttpResponse("""
         <script>
             alert('Something went wrong');
@@ -286,3 +378,47 @@ def update_model(version):
     deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{version}.h5"
     weights_path = os.path.join(BASE_DIR, deployed_weights_path)
     model.load_weights(weights_path)
+
+def test_deployed_model(request):
+
+    deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
+    weights_path = os.path.join(BASE_DIR, deployed_weights_path)
+    model.load_weights(weights_path)
+    test_images = TestImageData.objects.all()
+
+    y_true = []
+    y_pred = []
+
+    for test_image in test_images:
+        image_stream = io.BytesIO(test_image.image_data)
+        processed_image = preprocess_image(image_stream)
+
+        image = np.expand_dims(processed_image, axis=0)
+        prediction = model.predict(image)
+        predicted_class_index = np.argmax(prediction, axis=1)
+
+        # Error handling for labels
+        try:
+            label_index = int(test_image.label)
+            if label_index not in [0, 1, 2, 3]:
+                print(f"Label index '{label_index}' is out of expected range.")
+                continue
+        except ValueError:
+            print(f"Invalid label format: {test_image.label}")
+            continue
+
+        y_true.append(label_index)
+        y_pred.append(predicted_class_index[0])
+
+    accuracy = accuracy_score(y_true, y_pred)
+    report = classification_report(y_true, y_pred, labels=[0, 1, 2, 3], target_names=['Label 0', 'Label 1', 'Label 2', 'Label 3'])
+
+    print(accuracy)
+    print(report)
+
+    return HttpResponse("""
+    <script>
+        alert('Success');
+        window.location.href='/admin_view';
+    </script>
+    """) 

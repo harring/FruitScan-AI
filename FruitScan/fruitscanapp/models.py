@@ -43,6 +43,10 @@ class ImageData(models.Model):
     label = models.CharField(max_length=1)
     image_data = models.BinaryField()
 
+class TestImageData(models.Model):
+    label = models.CharField(max_length=1)
+    image_data = models.BinaryField()
+
 # Model for registered user
 class CustomUser(AbstractUser):
     # Additional field
