@@ -143,6 +143,10 @@ def classify_image(uploaded_image):
     # Reshape processed image
     image = np.expand_dims(processed_image, axis=0)
     
+    deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
+    weights_path = os.path.join(BASE_DIR, deployed_weights_path)
+    model.load_weights(weights_path)
+    
     # Make prediction
     prediction = model.predict(image)
 
@@ -378,7 +382,7 @@ def update_model(version):
     deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{version}.h5"
     weights_path = os.path.join(BASE_DIR, deployed_weights_path)
     model.load_weights(weights_path)
-    
+
 def test_deployed_model(request):
     tested_version = request.POST.get('test_version')
     deployed_weights_path = f"media/ModelWeights/fruitscan_model_weights_v{tested_version}.h5"
