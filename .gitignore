@@ -6,3 +6,16 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Ignore database
+*.sqlite3
+
+# Ignore model files
+*.h5
+/media/Performance/CnnModel
+/media/Performance/ConfusionMatrix
+
+# Ignore user files
+/media/Images
+
+
