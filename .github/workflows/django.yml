@@ -27,7 +27,6 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         touch FruitScan/__init__.py
-        touch __init__.py
         touch fruitscanapp/__init__.py
       working-directory: FruitScan
 
