@@ -167,31 +167,31 @@ def classify_image(uploaded_image):
     return predicted_class_label, fruit_nutritional_info
 
 def explainability(request):
+    is_user_logged_in = request.user.is_authenticated
     # Pair each label with its corresponding prediction confidence
     label_with_confidence = list(zip(class_labels, prediction[0]))
     
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
    
     print(processed_image.shape)
-    explainer = lime_image.LimeImageExplainer()
-    #squeezed_image = np.squeeze(image)
-    exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
-    print(exp.segments)
+    #explainer = lime_image.LimeImageExplainer()
+    #exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
+    #print(exp.segments)
     
-    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
-    img_with_mask = label2rgb(mask, processed_image, bg_label=0)
-    fig, ax = plt.subplots()
-    ax.imshow(img_with_mask)
-    ax.axis('off')
+    #temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
+    #img_with_mask = label2rgb(mask, processed_image, bg_label=0)
+    #fig, ax = plt.subplots()
+    #ax.imshow(img_with_mask)
+    #ax.axis('off')
     # Save the plot to a buffer
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
-    plt.close(fig)
+    #plt.close(fig)
     buf.seek(0)
     # Convert buffer contents to base64
     img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
     
-    return render(request, 'explainability.html', {'img_base64': img_base64, 'sorted_labels': sorted_labels})
+    return render(request, 'explainability.html', {'img_base64': img_base64, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
 
 # This function can be used to display the history of the images uploaded by the user. But it should to be modified.
 def display_all_uploaded_image(request):
