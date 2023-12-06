@@ -174,24 +174,41 @@ def explainability(request):
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
    
     print(processed_image.shape)
-    #explainer = lime_image.LimeImageExplainer()
-    #exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
-    #print(exp.segments)
+    explainer = lime_image.LimeImageExplainer()
+    exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
+    print(exp.segments)
     
-    #temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
-    #img_with_mask = label2rgb(mask, processed_image, bg_label=0)
-    #fig, ax = plt.subplots()
-    #ax.imshow(img_with_mask)
-    #ax.axis('off')
+    # Image of super pixels
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
+    img_with_mask = label2rgb(mask, processed_image, bg_label=0)
+    fig, ax = plt.subplots()
+    ax.imshow(img_with_mask)
+    ax.axis('off')
     # Save the plot to a buffer
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
-    #plt.close(fig)
+    plt.close(fig)
     buf.seek(0)
     # Convert buffer contents to base64
     img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
     
-    return render(request, 'explainability.html', {'img_base64': img_base64, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+    # Image of the heatmap
+    dict_heatmap = dict(exp.local_exp[exp.top_labels[0]])
+    heatmap = np.vectorize(dict_heatmap.get)(exp.segments)
+    fig_2, ax_2 = plt.subplots()
+    cax = ax_2.imshow(heatmap, cmap='RdBu', vmin=-heatmap.max(), vmax=heatmap.max())
+    plt.colorbar(cax)
+    ax_2.axis('off')
+    # Save the plot to a buffer
+    buf_2 = io.BytesIO()
+    plt.savefig(buf_2, format='png')
+    plt.close(fig_2)
+    buf_2.seek(0)
+    # Convert buffer contents to base64
+    img_heatmap = base64.b64encode(buf_2.getvalue()).decode('utf-8')
+    
+    
+    return render(request, 'explainability.html', {'img_base64': img_base64, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
 
 def train_model_view(request):
     # Call your model training function here
