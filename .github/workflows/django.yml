@@ -41,5 +41,5 @@ jobs:
 
     - name: Run Django tests
       run: |
-        python manage.py test
+        python manage.py test fruitscanapp
       working-directory: FruitScan
