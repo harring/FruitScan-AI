@@ -26,6 +26,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        touch FruitScan/__init__.py
+        touch __init__.py
+        touch fruitscanapp/__init__.py
       working-directory: FruitScan
 
     # Lint test IF we want to use it later
@@ -42,7 +45,5 @@ jobs:
 
     - name: Run Django tests
       run: |
-        touch __init__.py
-        touch fruitscanapp/__init__.py
         python manage.py test
       working-directory: FruitScan
