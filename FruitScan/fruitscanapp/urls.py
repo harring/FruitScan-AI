@@ -6,7 +6,6 @@ from .views import register, user_logout, CustomLoginView
 urlpatterns = [
     path("", views.home, name="home"),
     path("admin_view", views.adminPanel, name="admin_view"),
-    path('uploaded_image', views.display_all_uploaded_image, name='uploaded_image'),
     path('train_model/', views.train_model_view, name='train_model'),
     path('register/', register, name='register'),
     path('profile/', views.profile, name='profile'),

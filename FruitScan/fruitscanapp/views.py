@@ -193,13 +193,6 @@ def explainability(request):
     
     return render(request, 'explainability.html', {'img_base64': img_base64, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
 
-# This function can be used to display the history of the images uploaded by the user. But it should to be modified.
-def display_all_uploaded_image(request):
-    if request.method == 'GET':
-        #getting all the objects of the image
-        images = UploadedImage.objects.all()
-        return render(request, 'uploaded_image.html', {'uploaded_image': images})
-
 def train_model_view(request):
     # Call your model training function here
     train_model()
