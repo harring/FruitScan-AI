@@ -36,7 +36,9 @@ jobs:
       run: |
         python manage.py makemigrations
         python manage.py migrate
+      working-directory: FruitScan
 
     - name: Run Django tests
       run: |
         python manage.py test
+      working-directory: FruitScan/fruitscanapp
