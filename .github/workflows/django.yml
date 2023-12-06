@@ -25,11 +25,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        python3 -m venv venv
-        . venv/bin/activate
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       working-directory: FruitScan
 
+    # Lint test IF we want to use it later
     # - name: Lint with flake8
     #   run: |
     #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
