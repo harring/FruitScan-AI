@@ -173,7 +173,7 @@ def explainability(request):
     
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
    
-    print(processed_image.shape)
+    #print(processed_image.shape)
     explainer = lime_image.LimeImageExplainer()
     exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
     print(exp.segments)
@@ -184,9 +184,11 @@ def explainability(request):
     fig, ax = plt.subplots()
     ax.imshow(img_with_mask)
     ax.axis('off')
+    fig.patch.set_facecolor('none')
+    fig.patch.set_edgecolor('none')
     # Save the plot to a buffer
     buf = io.BytesIO()
-    plt.savefig(buf, format='png')
+    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.close(fig)
     buf.seek(0)
     # Convert buffer contents to base64
@@ -208,7 +210,7 @@ def explainability(request):
     img_heatmap = base64.b64encode(buf_2.getvalue()).decode('utf-8')
     
     
-    return render(request, 'explainability.html', {'img_base64': img_base64, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+    return render(request, 'test.html', {'img_base64': img_base64, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
 
 def train_model_view(request):
     # Call your model training function here

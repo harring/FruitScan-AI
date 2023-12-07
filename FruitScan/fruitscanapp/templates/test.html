@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}
+Display result
+{% endblock %}
+
+{% block content %}
+{% load static %}
+    {% if is_user_logged_in %}
+        <div class="button-container-top">
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary me-md-1 mt-2">My page</a>
+            <button class="btn btn-outline-primary me-md-1 mt-2" onclick="history.back()"><i class="fas fa-arrow-circle-left"></i> Back</button>
+            <a href="{% url 'user_logout' %}" class="btn btn-outline-primary me-md-1 mt-2"><i class="fas fa-sign-out"></i> Logout</a>
+        </div>
+    {% else %}
+        <div class="button-container-top">
+            <button class="btn btn-outline-primary me-md-1 mt-2" onclick="history.back()"><i class="fas fa-arrow-circle-left"></i> Back</button>
+        </div>
+    {% endif %}
+    <h2 class="title"> Explainability </h2>
+    <p class="text"> 
+        In this page we will show the how and why we get the result of our predictions and the limitations the model has.
+    </p>
+    <section class="panel one">
+        <div class="panel-content">
+            <h3> The How</h3>
+            <div class="row">
+                <div class="col-sm-5 container-1">
+                    <!--<img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/><br><br><br><br>-->
+                    <img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
+                    
+                </div>
+                <div class="col-sm-4 container-1">
+                    <p>
+                        To explain the result of our prediction and classification we use a technique which highlits the superpixels in the uploaded image that 
+                        contribute positively to the model's decision-making process. We identify the region of interest, or superpixels, of the image 
+                        used by the model to make its prediction.
+                    </p>
+                </div>
+                <div class="col-sm-3 container-1" style="padding-left: 20px;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for label, confidence in sorted_labels %}
+                            <tr>
+                                <td>{{ label }}</td>
+                                <td>{{ confidence|floatformat:3 }} %</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="panel two">
+        <div class="panel-content">
+            <h3 style="padding-bottom: 20px;"> The How</h3>
+            <img src="data:image/png;base64,{{ img_heatmap }}" alt="Explainability Image" class="img-thumbnail" style="width: 500px; height: 500px; object-fit: contain;"/>
+            <!--<img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>-->
+        </div>
+    </section>
+    <section class="panel three">
+        <div class="panel-content">
+            <h3 style="padding-bottom: 20px;"> The How</h3>
+            <img  src="{% static 'images/cnn_model.png' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
+        </div>
+    </section>
+    <section class="panel four">
+        <div class="panel-content">
+            <h3 style="padding-bottom: 20px;"> The limitations of the model</h3>
+            <p> The model created has it's limitations. To recognize images of fruits that are very different from the dataset used for the</p>
+            <p> training of the model and for the testing set. We were able to reach a total of 0.96% of accuracy when training with 1000 images</p>
+            <p> and testing with 100 images</p>
+        </div>
+    </section>
+
+    <script>
+        $(function () { // wait for document ready
+            // init
+            var controller = new ScrollMagic.Controller({
+                globalSceneOptions: {
+                    triggerHook: 'onLeave',
+                    duration: "300%" // this works just fine with duration 0 as well
+                    // However with large numbers (>20) of pinned sections display errors can occur so every section should be unpinned once it's covered by the next section.
+                    // Normally 100% would work for this, but here 200% is used, as Panel 3 is shown for more than 100% of scrollheight due to the pause.
+                }
+            });
+
+            // get all slides
+            var slides = document.querySelectorAll("section.panel");
+
+            // create scene for every slide
+            for (var i=0; i<slides.length; i++) {
+                new ScrollMagic.Scene({
+                        triggerElement: slides[i]
+                    })
+                    .setPin(slides[i], {pushFollowers: false})
+                    .addTo(controller);
+            }
+        });
+    </script>
+<style>
+h3 {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    text-align: center;
+    padding-top: 20px;
+}
+
+p {
+
+    text-align: justify;
+}
+
+.panel-content {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    text-align: center; 
+}
+
+html, body {
+    height: 100%;
+}
+
+.panel {
+    height: 100%;
+	width: 100%;
+}
+.panel.one {
+    background: #FFF5EE;
+}
+.panel.two {
+    background-color: #FAEBD7;
+}
+.panel.three {
+    background: #F0FFF0;
+}
+.panel.four {
+    background: #FAEBD7;
+}
+
+.container-1 {
+    padding-top: 30px;
+}
+
+.button-container-top {
+    text-align: right; 
+    padding-left: 50px; 
+    padding-right: 0px;
+}
+
+.button-container-top .btn.btn-outline-primary {
+    width: 140px;
+    background-color: white;
+    color: black; 
+    border-color: black; 
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+/* Hover state styling */
+.button-container-top .btn.btn-outline-primary:hover {
+    color: black; 
+    background-color: #FFD700; 
+    border-color: black; 
+    font-weight: bold;
+    /*font-family: "Sofia", sans-serif;*/
+}
+
+.title {
+    font-family: "Sofia", sans-serif;
+    font-weight: bold;
+    font-size: 2.2em;
+    max-width: 1200px; /* or your preferred width */
+    margin: 0 auto; /* centering */
+    text-align: center;
+}
+
+.text {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    max-width: 1200px; /* or your preferred width */
+    margin: 0 auto; /* centering */
+    text-align: center;
+}
+
+</style>
+{% endblock %}

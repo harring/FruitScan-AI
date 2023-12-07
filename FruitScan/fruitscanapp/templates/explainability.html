@@ -4,8 +4,8 @@ Display result
 {% endblock %}
 
 {% block content %}
+{% load static %}
     <div class="container-fluid bg-user-color text-center full-height">
-        
         {% if is_user_logged_in %}
             <div class="button-container-top">
                 <a href="{% url 'profile' %}" class="btn btn-outline-primary me-md-1 mt-2">My page</a>
@@ -17,17 +17,43 @@ Display result
                 <button class="btn btn-outline-primary me-md-1 mt-2" onclick="history.back()"><i class="fas fa-arrow-circle-left"></i> Back</button>
             </div>
         {% endif %}
-        <img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image"/>
-        {% for label, confidence in sorted_labels %}
-            <p> {{ label }}: {{ confidence|floatformat:3 }} %</p>
-        {% empty %}
-            <p> No data found </p>
-        {% endfor %}
-        <img src="data:image/png;base64,{{ img_heatmap }}" alt="Explainability Image"/>
-        
+        <h2> Explainability </h2>
+        <p> In this page we will show the how and why we get the result of our predictions and the limitations the model has.</p>
+        <div class="row">
+            <div class="col-sm-5 container-1">
+                <img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
+                <!--<img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image"/>-->
+            </div>
+            <div class="col-sm-2 container-1">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Probability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for label, confidence in sorted_labels %}
+                        <tr>
+                            <td>{{ label }}</td>
+                            <td>{{ confidence|floatformat:3 }} %</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-5 container-1">
+                <img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
+                <!--<img src="data:image/png;base64,{{ img_heatmap }}" alt="Explainability Image"/>-->
+            </div>
+        </div>
     </div> 
 
 <style>
+.container-1 {
+    padding-top: 30px;
+}
+
 .button-container-top {
     text-align: right; 
     padding-left: 50px; 
