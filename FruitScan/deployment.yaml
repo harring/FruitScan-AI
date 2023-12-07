@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: web-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: web
@@ -15,19 +15,27 @@ spec:
       containers:
       - name: web
         image: ghcr.io/harring/fruitscan:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
           value: sqlite:///app/db.sqlite3
+        volumeMounts:
+        - name: db-storage
+          mountPath: /data
+          subPath: db.sqlite3
       volumes:
         - name: static-storage
           emptyDir: {}
         - name: media-storage
           emptyDir: {}
         - name: db-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: db-pvc
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,3 +48,16 @@ spec:
       port: 80
       targetPort: 8000
   type: LoadBalancer
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
