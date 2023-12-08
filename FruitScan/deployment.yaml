@@ -25,6 +25,11 @@ spec:
         - name: db-storage
           mountPath: /data
           subPath: db.sqlite3
+        resources:  # Added resource requests and limits
+          requests:
+            memory: "64Gi"
+          limits:
+            memory: "64Gi"
       volumes:
         - name: static-storage
           emptyDir: {}
