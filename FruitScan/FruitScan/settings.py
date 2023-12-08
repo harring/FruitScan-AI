@@ -78,7 +78,7 @@ MODEL_VERSION = 1
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'data/db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, '/data/db.sqlite3'),
     }
 }
 
@@ -121,9 +121,9 @@ STATIC_URL = 'static/'
 
 # Images uploaded path
 # Base url to serve media files
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 # Path to where the media is stored
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "/media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
