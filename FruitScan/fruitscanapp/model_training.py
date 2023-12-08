@@ -21,7 +21,7 @@ matplotlib.use('Agg')
 
 
 def save_model(model):
-    base_folder = "/media/ModelWeights"
+    base_folder = "media/ModelWeights"
     base_filename = "fruitscan_model_weights_v"
     version = 1
 
@@ -130,7 +130,7 @@ def train_model():
     plt.ylabel('True')
 
     # Define the directory for saving the confusion matrix
-    conf_matrix_dir = os.path.join(settings.BASE_DIR, '/media/Performance/ConfusionMatrix')
+    conf_matrix_dir = os.path.join(settings.BASE_DIR, 'media/Performance/ConfusionMatrix')
     os.makedirs(conf_matrix_dir, exist_ok=True)  # Create directory if it doesn't exist
 
     # Save the plot as an image file in the specified directory
@@ -138,7 +138,7 @@ def train_model():
     print("Confusion matrix created.")
 
     # Plot and save the CNN model diagram
-    cnn_plot_dir = os.path.join(settings.BASE_DIR, '/media/Performance/CnnModel')
+    cnn_plot_dir = os.path.join(settings.BASE_DIR, 'media/Performance/CnnModel')
     os.makedirs(cnn_plot_dir, exist_ok=True)  # Create directory if it doesn't exist
 
     tf.keras.utils.plot_model(

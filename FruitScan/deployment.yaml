@@ -23,10 +23,10 @@ spec:
           value: sqlite:///app/db.sqlite3
         volumeMounts:
         - name: db-storage
-          mountPath: /data
+          mountPath: data
           subPath: db.sqlite3
         - name: media-storage
-          mountPath: /media
+          mountPath: media
         resources:  # Added resource requests and limits
           requests:
             memory: "64Gi"
