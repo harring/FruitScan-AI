@@ -25,6 +25,8 @@ spec:
         - name: db-storage
           mountPath: /data
           subPath: db.sqlite3
+        - name: media-storage
+          mountPath: /media
         resources:  # Added resource requests and limits
           requests:
             memory: "64Gi"
@@ -34,7 +36,8 @@ spec:
         - name: static-storage
           emptyDir: {}
         - name: media-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: media-pvc
         - name: db-storage
           persistentVolumeClaim:
             claimName: db-pvc
@@ -65,4 +68,17 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
