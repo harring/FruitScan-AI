@@ -1,5 +1,7 @@
 from django.test import TestCase
 from .models import CustomUser, FruitClassification, ImageData, TestImageData, UploadedImage, UserImage, user_directory_path
+from django.urls import reverse
+
 
 class ImageDataTestCase(TestCase):
     def setUp(self):
@@ -34,6 +36,7 @@ class UploadedImageTestCase(TestCase):
         # Check if the image path is correct
         self.assertEqual(image.image.name, expected_image_path)
 
+
 class TestImageDataTestCase(TestCase):
     def setUp(self):
         # Example image data (bytes)
@@ -51,6 +54,16 @@ class TestImageDataTestCase(TestCase):
 
         # Check if the image data is correct (this is a simplistic check)
         self.assertTrue(image_data_instance.image_data.startswith(b'\x89PNG'))
+
+    def test_prediction_success(self):
+        # TestImageData objects have the correct label and image data.
+        image_data_instance = TestImageData.objects.get(label='B')
+
+        # Upload the image and make a prediction
+        response = self.client.post(reverse('home'), {'image': image_data_instance})
+
+        # Check if the response is successful (status code 200)
+        self.assertEqual(response.status_code, 200)
 
 class CustomUserTestCase(TestCase):
     def test_custom_user_str(self):
@@ -82,3 +95,29 @@ class UserImageTestCase(TestCase):
 
         # Check if the prediction is correct
         self.assertEqual(image_instance.pred, "prediction")
+
+class AuthenticationTests(TestCase):
+    def test_user_login(self):
+        # Log in the user
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'testpassword'})
+
+        # Check if the login was successful
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_logout(self):
+        # Log in a test user
+        self.client.login(username='testuser', password='testpassword')
+
+        # Log out the user
+        response = self.client.get(reverse('logout'))
+
+        # Check if the logout was successful
+        self.assertEqual(response.status_code, 200)
+       
+    def test_non_logged_in_user_access_restricted_view(self):
+        # Access a view that requires authentication
+        response = self.client.get(reverse('profile'))
+
+        # Check if the user is redirected to the login page
+        login_url = reverse('login')
+        self.assertRedirects(response, f"/accounts{login_url}?next={reverse('profile')}")
