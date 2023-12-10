@@ -105,6 +105,7 @@ def home(request):
         form = ImageForm()
     return render(request, 'home.html', {'form': form, 'is_user_logged_in': is_user_logged_in})   
 
+@login_required(login_url='/custom_admin/')
 def adminPanel(request):
     weights = ModelWeights.objects.all()
     model_version = deployed_model_version

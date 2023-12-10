@@ -26,9 +26,9 @@ Home
                     <button type="login" id="homeAdminBtn" class="btn btn-outline-primary mt-2 mypage-button-position">Admin Log In</button>
                 </div>
                 <script>
-                //        document.getElementById("homeAdminBtn").addEventListener("click", function() {
-                //        window.location.href = "{% url 'admin_view' %}";
-                //    });
+                    document.getElementById('homeAdminBtn').addEventListener('click', function() {
+                        window.location.href = '/custom_admin';
+                    });
                 </script>
             {% endif %}
         </div>
