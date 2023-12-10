@@ -46,7 +46,11 @@ Display result
                     <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg">Upload another image</a>
                 </div>
                 <div class="button-container">
-                    <a href="{% url 'explainability' %}" class="btn btn-outline-primary btn-lg">Explainability</a>
+                    <!--<a href="{% url 'explainability' %}" class="btn btn-outline-primary btn-lg">Explainability</a>-->
+                    <button id="explainability-btn" class="btn btn-outline-primary btn-lg">Explainability</button>
+                </div>
+                <div class="progress" style="display:none;">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             <div class="col-sm-7 container-2">
@@ -175,7 +179,35 @@ body {
 
 </style>
 
+<script>
+    document.getElementById('explainability-btn').addEventListener('click', function() {
+        document.querySelector('.progress').style.display = 'block';
+        updateProgressBar(0); // Initialize progress bar
+        startExplainabilityProcess();
+    });
 
+    function updateProgressBar(progress) {
+        var progressBar = document.querySelector('.progress-bar');
+        progressBar.style.width = progress + '%';
+        progressBar.setAttribute('aria-valuenow', progress);
+        progressBar.textContent = progress + '%';
+    }
+
+    function startExplainabilityProcess() {
+        // Example: Update progress bar every second (as a simulation)
+        var progress = 0;
+        var interval = setInterval(function() {
+            progress += 10; // Increment progress
+            updateProgressBar(progress);
+
+            if(progress >= 100) {
+                clearInterval(interval);
+                window.location.href = "{% url 'explainability' %}"; // Redirect to explainability page
+            }
+        }, 3000); // Adjust time interval as per the expected duration of the task
+    }
+
+</script>
 
 {% endblock %}
 
