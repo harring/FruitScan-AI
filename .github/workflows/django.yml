@@ -1,0 +1,47 @@
+name: Django CI
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+#init files required to find the modules
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        touch FruitScan/__init__.py
+        touch fruitscanapp/__init__.py
+      working-directory: FruitScan
+
+    # Lint test IF we want to use it later
+    # - name: Lint with flake8
+    #   run: |
+    #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run Django migrations
+      run: |
+        python manage.py makemigrations
+        python manage.py migrate
+      working-directory: FruitScan
+
+    - name: Run Django tests
+      run: |
+        python manage.py test
+      working-directory: FruitScan
