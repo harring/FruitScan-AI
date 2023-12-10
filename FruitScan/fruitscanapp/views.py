@@ -48,6 +48,7 @@ channels = 3
 num_classes = 4
 processed_image = None
 prediction = None
+predicted_class_label = None
 
 # Create model architecture
 model = Sequential([
@@ -142,7 +143,7 @@ def image_to_base64(img):
 
 # Function that runs the prediction
 def classify_image(uploaded_image):
-    global processed_image, prediction
+    global processed_image, prediction, predicted_class_label
     processed_image = preprocess_image(uploaded_image)
     
     # Reshape processed image
@@ -170,7 +171,7 @@ def explainability(request):
     is_user_logged_in = request.user.is_authenticated
     # Pair each label with its corresponding prediction confidence
     label_with_confidence = list(zip(class_labels, prediction[0]))
-    
+    result = predicted_class_label
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
    
     #print(processed_image.shape)
@@ -210,7 +211,7 @@ def explainability(request):
     img_heatmap = base64.b64encode(buf_2.getvalue()).decode('utf-8')
     
     
-    return render(request, 'test.html', {'img_base64': img_base64, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+    return render(request, 'test.html', {'result': result, 'img_base64': img_base64, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
 
 def train_model_view(request):
     # Call your model training function here

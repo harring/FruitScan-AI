@@ -18,64 +18,118 @@ Display result
     {% endif %}
     <h2 class="title"> Explainability </h2>
     <p class="text"> 
-        In this page we will show the how and why we get the result of our predictions and the limitations the model has.
+        On this page, we delve into both the 'why' and the 'how' behind our model's predictions.<br> 
+        The 'why' explains the model's decision-making process, focusing on interpreting significant features.<br>
+        The 'how' refer to the technical mechanisms and process the model employes to make its predictions.<br>
+        Additionally, the final section addresses the limitations of our model. 
     </p>
     <section class="panel one">
         <div class="panel-content">
-            <h3> The How</h3>
+            <h3> The 'Why': using super-pixels</h3>
             <div class="row">
+                <div class="col-sm-7 container-1">
+                    <img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image" class="img-thumbnail" style="width: 500px; height: 400px; object-fit: contain;"/>
+                </div>
                 <div class="col-sm-5 container-1">
-                    <!--<img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/><br><br><br><br>-->
-                    <img src="data:image/png;base64,{{ img_base64 }}" alt="Explainability Image" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
-                    
-                </div>
-                <div class="col-sm-4 container-1">
-                    <p>
-                        To explain the result of our prediction and classification we use a technique which highlits the superpixels in the uploaded image that 
-                        contribute positively to the model's decision-making process. We identify the region of interest, or superpixels, of the image 
-                        used by the model to make its prediction.
-                    </p>
-                </div>
-                <div class="col-sm-3 container-1" style="padding-left: 20px;">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Label</th>
-                                <th>Probability</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for label, confidence in sorted_labels %}
-                            <tr>
-                                <td>{{ label }}</td>
-                                <td>{{ confidence|floatformat:3 }} %</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                To explain the result of our prediction and classification of {{ result }}, we utilize a technique that interprets the features the model
+                                considered significant in reaching its conclusion. This techinique highlights the superpixels in the uploaded image that 
+                                contribute positively to the model's decision-making process. It identifies the region of interest, or superpixels, which 
+                                the model used to make its prediction.<br>
+                                As a result, you can observe how the probability of the uploaded image being classified as any of the fruits shown in the table below is determined. 
+                                It's possible that the model considers not just the main object in the image but also the surrounding background. 
+                                This is evident from the prediction percentages for other labels in the prediction list.
+                                Therefore, it's important for us to understand the key components or parts of the image that the model focuses on to make its prediction.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="padding-top: 30px; display: flex; justify-content: center;">
+                            <table class="table table-striped" style="width: 65%;">
+                                <thead>
+                                    <tr>
+                                        <th>Label</th>
+                                        <th>Probability</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for label, confidence in sorted_labels %}
+                                    <tr>
+                                        <td>{{ label }}</td>
+                                        <td>{{ confidence|floatformat:3 }} %</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <section class="panel two">
         <div class="panel-content">
-            <h3 style="padding-bottom: 20px;"> The How</h3>
-            <img src="data:image/png;base64,{{ img_heatmap }}" alt="Explainability Image" class="img-thumbnail" style="width: 500px; height: 500px; object-fit: contain;"/>
-            <!--<img  src="{% static 'images/Banana.jpg' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>-->
+            <h3 style="padding-bottom: 20px;"> The 'Why': using heatmap</h3>
+            <div class="row">
+                <div class="col-sm-8 container-1" style="padding-right: 100px;">
+                    <img src="data:image/png;base64,{{ img_heatmap }}" alt="Explainability Image" class="img-thumbnail" style="width: 500px; height: 500px; object-fit: contain;"/>
+                </div>
+                <div class="col-sm-4 container-1" style="padding-right: 50px;">
+                    <p>
+                        In this section, we display the heatmap image. Following the same principle as the technique used above, the heatmap highlights the 
+                        most influential areas in the model's decision to classify the image as {{ result }}. <br> 
+                        To interpret this colormap, understand that it interpolates between red and blue colors. Blue represents the pixels 
+                        that had the most positive influence on the model's decision-making, while red indicates the most negative influence.<br>
+                        Areas closer to blue highlight distinctive features, such as curves or colors, used to identify the fruit. Conversely, areas 
+                        closer to red represent characteristics that made the model less confident in its prediction. Neutral-colored 
+                        areas did not significantly influence the model's prediction. <br>
+                        If the highlights are focusing more on the background rather than the fruit itself, it might indicate an issue with how the model has learned to make predictions.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
     <section class="panel three">
         <div class="panel-content">
-            <h3 style="padding-bottom: 20px;"> The How</h3>
-            <img  src="{% static 'images/cnn_model.png' %}" class="img-thumbnail" style="width: 400px; height: 400px; object-fit: contain;"/>
-        </div>
+            <h3 style="padding-bottom: 20px;"> The 'How': model design</h3>
+            <div class="row">
+                <div class="col-sm-8 container-1" style="padding-right: 100px;">
+                    <img  src="{% static 'images/cnn_model.png' %}" class="img-thumbnail" style="width: 600px; height: 600px; object-fit: contain;"/>
+                </div>
+                <div class="col-sm-4 container-1" style="padding-right: 50px;">
+                    <p>
+                        In this section we display the model design used to make predictions. This includes the structure of the 
+                        model's architecture, the data flow through its layers, and the algorithms at work.<br>
+                        Our model employs a combination of Convolutional Neural Network (CNN) layers and a neural network. 
+                        The CNN portion is dedicated to image recognition, optimized for processing pixel data. 
+                        In this part, we utilize layers of filters to detect features such as edges, colors, and contours. 
+                        These features are processed in the Conv2D layers and then resized in the MaxPooling2D layer, which selects 
+                        the maximum elements for dimensionality reduction.<br>
+                        Following this, the output from the CNN is converted and flattened into a one-dimensional array in the Flatten layer. 
+                        This flattened data is then fed into the fully connected (Dense) layers.<br>
+                        The fully connected layer consist of neurons that are crucial for integrating learned features and making final predictions. 
+                        They interpret the detected features and patterns to classify and predict the output. Which in this case was a {{ result }}. 
+                    </p>
+                </div>
+            </div>
     </section>
     <section class="panel four">
         <div class="panel-content">
-            <h3 style="padding-bottom: 20px;"> The limitations of the model</h3>
-            <p> The model created has it's limitations. To recognize images of fruits that are very different from the dataset used for the</p>
-            <p> training of the model and for the testing set. We were able to reach a total of 0.96% of accuracy when training with 1000 images</p>
-            <p> and testing with 100 images</p>
+            <h3 style="padding-bottom: 50px;"> Limitations of the model</h3>
+            <p style="padding-bottom: 150px;"> 
+                Our model, while effective, has certain limitations. One key limitation is its ability to recognize fruit images that significantly 
+                differ from those in our training and testing datasets. The model was trained and tested with different and limited ammout of data, being able to 
+                achieving an accuracy rate of 96%.<br>
+                This high accuracy indicates strong performance on the dataset used. However, it's important to note that the model's 
+                effectiveness may decrease when encountering fruit images that vary substantially in appearance from the training examples. 
+                Variations can include differences in fruit size, color, shape, or presentation (like sliced or whole fruit).<br>
+                Providing a clear explanation of our model's limitations is crucial for setting realistic expectations when using our application.
+            </p>
+            <a href="{% url 'home' %}" style="padding-top: 100px; ">
+                <img  src="{% static 'images/FruitScan_logo.png' %}" class="circle"/>
+            </a>
         </div>
     </section>
 
@@ -85,7 +139,7 @@ Display result
             var controller = new ScrollMagic.Controller({
                 globalSceneOptions: {
                     triggerHook: 'onLeave',
-                    duration: "300%" // this works just fine with duration 0 as well
+                    duration: "200%" // this works just fine with duration 0 as well
                     // However with large numbers (>20) of pinned sections display errors can occur so every section should be unpinned once it's covered by the next section.
                     // Normally 100% would work for this, but here 200% is used, as Panel 3 is shown for more than 100% of scrollheight due to the pause.
                 }
@@ -145,7 +199,7 @@ html, body {
 }
 
 .container-1 {
-    padding-top: 30px;
+    padding-top: 40px;
 }
 
 .button-container-top {
@@ -184,7 +238,7 @@ html, body {
     font-weight: bold;
     font-size: 1.2em;
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
     max-width: 1200px; /* or your preferred width */
     margin: 0 auto; /* centering */
     text-align: center;
