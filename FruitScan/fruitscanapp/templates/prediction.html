@@ -46,8 +46,7 @@ Display result
                     <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg">Upload another image</a>
                 </div>
                 <div class="button-container">
-                    <!--<a href="{% url 'explainability' %}" class="btn btn-outline-primary btn-lg">Explainability</a>-->
-                    <button id="explainability-btn" class="btn btn-outline-primary btn-lg">Explainability</button>
+                    <a id="explainabilityButton" href="{% url 'explainability' %}" class="btn btn-outline-primary btn-lg">Explainability</a>
                 </div>
             </div>
             <div class="col-sm-7 container-2">
@@ -73,9 +72,27 @@ Display result
                 </div>
             </div>    
         </div>
+        <div id="loadingSpinner" class="spinner-border spinner" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <script>
+            document.getElementById("explainabilityButton").addEventListener("click", function() {
+                document.getElementById("loadingSpinner").style.display = 'block';
+                // Redirect or further actions can be added here
+            });
+        </script>
     </div>    
 
 <style>
+.spinner {
+    display: none;
+    width: 6rem;
+    height: 6rem;
+    top: 50%; 
+    left: 50%;
+    position: fixed; 
+    z-index: 1000;
+}
 
 body {
     background-image: url('{% static "images/" %}{{ result }}.jpg');
