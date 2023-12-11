@@ -7,7 +7,7 @@
     <div class="container-fluid bg-user-color text-center full-height">  
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <div class="button-container">
-                <button type="login" class="btn btn-outline-primary mt-2 button-position">Admin Log In</button>
+                <button type="login" class="btn btn-outline-primary me-md-1 mt-2 button-position" style="width: 150px;"><i class="fas fa-sign-in"></i> Admin Log In</button>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -17,7 +17,7 @@
                     {% csrf_token %}
                     {{ form.as_p }}
                     <div class="button-container">
-                        <button type="login" id="homeLoginBtn" class="btn btn-outline-primary btn-lg mt-2 button-position">Log In</button>
+                        <button type="login" id="homeLoginBtn" class="btn btn-outline-primary btn-lg me-md-1 mt-2 button-position">Log In</button>
                     </div>
                 </form>
                 <br>
@@ -52,7 +52,7 @@ body {
 }
 
 .button-container .btn.btn-outline-primary {
-    width: 140px;
+    width: 130px;
     background-color: white;
     color: black; 
     border-color: black; 
