@@ -7,7 +7,7 @@ Explainability result
 {% load static %}
     {% if is_user_logged_in %}
         <div class="button-container-top">
-            <a href="{% url 'profile' %}" class="btn btn-outline-primary me-md-1 mt-2">My page</a>
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary me-md-1 mt-2"><i class="fas fa-user"></i> My page</a>
             <button class="btn btn-outline-primary me-md-1 mt-2" onclick="history.back()"><i class="fas fa-arrow-circle-left"></i> Back</button>
             <a href="{% url 'user_logout' %}" class="btn btn-outline-primary me-md-1 mt-2"><i class="fas fa-sign-out"></i> Logout</a>
         </div>

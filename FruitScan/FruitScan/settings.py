@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "fruitscanapp",
-    'channels',
 ]
 
 MIDDLEWARE = [
@@ -69,8 +68,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'FruitScan.routing.application'
-#WSGI_APPLICATION = 'FruitScan.wsgi.application'
+WSGI_APPLICATION = 'FruitScan.wsgi.application'
 
 MODEL_VERSION = 1
 
