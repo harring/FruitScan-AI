@@ -28,11 +28,11 @@ Home
                     <button type="login" id="homeAdminBtn" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position" style="width: 150px;"><i class="fas fa-sign-in"></i> Admin Log In</button>
                 </div>
                 <script>
+                    document.getElementById('homeAdminBtn').addEventListener('click', function() {
+                        window.location.href = '/custom_admin';
+                    });
                     document.getElementById("homeLoginBtn").addEventListener("click", function() {
                         window.location.href = "{% url 'login' %}";
-                    });
-                        document.getElementById("homeAdminBtn").addEventListener("click", function() {
-                        window.location.href = "{% url 'admin_view' %}";
                     });
                 </script>
             {% endif %}
