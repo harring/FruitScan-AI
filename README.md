@@ -1,7 +1,8 @@
 # FruitScan CNN Project
 
 ## Overview
-This project uses a Convolutional Neural Network (CNN) implemented in Django to predict which fruit is in an image. It currently supports identification of kiwi, mango, banana, and tomato, with the capability to extend to more fruits. 
+FruitScan is a web-application that predicts which fruit is in an image and provides the user with nutritional information about that fruit. This allows the user to learn about fruits and make educated choices when eating healthy.
+This project uses a Convolutional Neural Network (CNN) implemented in Django. It currently supports identification of kiwi, mango, banana, and tomato, with the capability to extend to more fruits. 
 
 ## Features
 - CNN for fruit prediction.
@@ -18,25 +19,33 @@ This project was developed as a part of the course "DIT826 H23 Software Engineer
 
 Below are some screenshots illustrating key features of our application:
 
+### FruitScan Logo
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/FruitScan_logo.png?raw=true" width="300">
+
+
 ### Administrator Menu
-![Administrator Menu](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+
 
 *This screenshot displays the administrator menu, showcasing the backend control features available to administrators. Administrators can add/remove images to the training and test sets. They can also evaluate and deploy different model versions.*
 
 ### Fruit Prediction Page
-![Fruit Prediction Page](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+
 
 *Here, you can see a sample page where a fruit is predicted by our CNN model.*
 
 ### Explainability Feature
-![Explainability Feature](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+
 
 *This image illustrates the explainability aspect of our application, detailing how the CNN model arrives at its predictions.*
 
 ## CNN Design
 
 ### CNN Architecture Overview
-![CNN Architecture](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/cnn_model.png?raw=true)
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/cnn_model.png?raw=true">
+
 
 *This image provides an overview of the CNN architecture used in our project. It details the various layers and their configurations within our fruit prediction model.*
 
