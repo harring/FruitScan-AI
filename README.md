@@ -1,92 +1,141 @@
-# FruitScan
+# FruitScan CNN Project
+
+## Overview
+This project uses a Convolutional Neural Network (CNN) implemented in Django to predict which fruit is in an image. It currently supports identification of kiwi, mango, banana, and tomato, with the capability to extend to more fruits. 
+
+## Features
+- CNN for fruit prediction.
+- Docker and Docker-Compose integration.
+- GitHub Actions for continuous integration.
+- Unit tests to ensure code reliability.
+- Kubernetes deployment configurations.
+
+## Project Status
+
+This project was developed as a part of the course "DIT826 H23 Software Engineering for Data-Intensive AI Applications" at the University of Gothenburg. As the course has concluded, the development of this project has also reached its completion. Therefore, the project is currently in a maintenance phase and will not be actively developed further. However, the codebase remains available for educational purposes, future reference, and community use.
+
+## Screenshots
+
+Below are some screenshots illustrating key features of our application:
+
+### Administrator Menu
+![Administrator Menu](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+
+*This screenshot displays the administrator menu, showcasing the backend control features available to administrators. Administrators can add/remove images to the training and test sets. They can also evaluate and deploy different model versions.*
+
+### Fruit Prediction Page
+![Fruit Prediction Page](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+
+*Here, you can see a sample page where a fruit is predicted by our CNN model.*
+
+### Explainability Feature
+![Explainability Feature](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg)
+
+*This image illustrates the explainability aspect of our application, detailing how the CNN model arrives at its predictions.*
+
+## CNN Design
+
+### CNN Architecture Overview
+![CNN Architecture](https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/cnn_model.png?raw=true)
+
+*This image provides an overview of the CNN architecture used in our project. It details the various layers and their configurations within our fruit prediction model.*
 
 
+## Getting Started
 
-## Getting started
+### Prerequisites
+- Docker
+- Kubernetes
+- Google Cloud SDK
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Installation
+1. Clone the repository:
+`git clone [repository-url]`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+2. Build the Docker image:
+`docker-compose build`
 
-## Add your files
+3. Run the Docker container:
+`docker-compose up`
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
 
-```
-cd existing_repo
-git remote add origin https://git.chalmers.se/courses/dit826/2023/group8/fruitscan.git
-git branch -M main
-git push -uf origin main
-```
+### Connecting to Kubernetes Cluster
+To connect to the Kubernetes cluster:
 
-## Integrate with your tools
+1. **Install kubectl:** 
+- Follow the instructions at [Kubernetes kubectl](https://kubernetes.io/docs/tasks/tools/).
 
-- [ ] [Set up project integrations](https://git.chalmers.se/courses/dit826/2023/group8/fruitscan/-/settings/integrations)
+2. **Install Google Cloud SDK:** 
+- Instructions available at [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
 
-## Collaborate with your team
+3. **Initialize gcloud:** 
+- If not prompted to log in, run `gcloud init`.
+- When prompted to pick a project, abort (Ctrl+C).
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+4. **Get kubectl credentials for the project(example command):**
+`gcloud container clusters get-credentials sample-cluster --location=us-central1-f `
 
-## Test and Deploy
+5. **Install any required plugins:** 
+- If warned about a missing plugin (e.g., gcloud-auth-plugin), install it.
 
-Use the built-in continuous integration in GitLab.
+6. **Accessing the project:**
+- Use `kubectl` to interact with the cluster:
+  - `kubectl get pods` shows active pods.
+  - `kubectl get nodes` shows active nodes (`-o wide` for more info).
+  - `kubectl get services` shows services.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Kubernetes Management
+- **To delete pods:** (Use with caution)
+`kubectl delete pods -l app=web`
 
-***
+- **To update deployment configuration:**
+- Navigate to the `deployment.yaml` file directory.
+- Apply the new configuration:
+  `kubectl apply -f deployment.yaml`
 
-# Editing this README
+## Tech Stack
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Our project leverages a robust stack of technologies and libraries. Below is a breakdown of the key components:
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Core Technologies
+- **Django:** A high-level Python Web framework that encourages rapid development and clean, pragmatic design.
+- **TensorFlow:** An open-source software library for machine learning, used for the CNN model in our project.
+- **Keras:** A deep learning API written in Python, running on top of the machine learning platform TensorFlow.
+- **Docker:** A set of platform-as-a-service products that use OS-level virtualization to deliver software in packages called containers.
 
-## Name
-Choose a self-explaining name for your project.
+### Data Science and Machine Learning Libraries
+- **NumPy:** A library for the Python programming language, adding support for large, multi-dimensional arrays and matrices.
+- **Pandas:** A software library written for data manipulation and analysis.
+- **Scikit-Learn:** A free software machine learning library for Python.
+- **Matplotlib** and **Seaborn:** Libraries for creating static, interactive, and animated visualizations in Python.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Web Development Libraries
+- **Flask:** A micro web framework written in Python.
+- **Jinja2:** A modern and designer-friendly templating language for Python, modeled after Django’s templates.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Other Key Libraries
+- **opencv-python:** A library of Python bindings designed to solve computer vision problems.
+- **Pillow:** The Python Imaging Library adds image processing capabilities to your Python interpreter.
+- **Requests:** An elegant and simple HTTP library for Python.
+- **h5py:** A Pythonic interface to the HDF5 binary data format.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Development and Testing Tools
+- **ipython, Jupyter:** Tools for interactive computing in Python.
+- **pytest:** A framework for easily writing small tests, yet scales to support complex functional testing.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+This list represents a snapshot of the primary technologies used in our project. For a full list of dependencies, please refer to our `requirements.txt` file.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
 
 ## License
-For open source projects, say how it is licensed.
+This project is licensed under the MIT License. 
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+## Developers/Collaborators
+
+For any queries or contributions, feel free to reach out to our team:
+
+- Erik Harring - [harring](https://github.com/harring)
+- Patricia Marklund - [PatyMarklund](https://github.com/PatyMarklund)
+- Mijin Kim - [mezyn](https://github.com/mezyn)
+- Jonathan Bergdahl - [jonathanb00](https://github.com/jonathanb00)
+
