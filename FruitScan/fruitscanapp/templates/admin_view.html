@@ -171,8 +171,13 @@
     </div>
     <script>
         document.getElementById("upload_to_dataset").addEventListener("click", function(event) {
-            document.getElementById("loadingSpinner").style.display = 'block';
-            document.getElementById("overlay").style.display = 'block';  
+            var fileInput = this.form.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                //Do nothing
+            } else {
+                document.getElementById("loadingSpinner").style.display = 'block';
+                document.getElementById("overlay").style.display = 'block';
+            }
         });
         document.getElementById("delete_images").addEventListener("click", function() {
             document.getElementById("loadingSpinner").style.display = 'block';
@@ -183,8 +188,13 @@
             document.getElementById("overlay").style.display = 'block';
         });   
         document.getElementById("upload_test_set").addEventListener("click", function(event) {
-            document.getElementById("loadingSpinner").style.display = 'block';
-            document.getElementById("overlay").style.display = 'block';
+            var fileInput = this.form.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                //Do nothing
+            } else {
+                document.getElementById("loadingSpinner").style.display = 'block';
+                document.getElementById("overlay").style.display = 'block';
+            }
         });
         document.getElementById("delete_test_imgs").addEventListener("click", function() {
             document.getElementById("loadingSpinner").style.display = 'block';
