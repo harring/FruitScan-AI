@@ -111,6 +111,7 @@ Our project leverages a robust stack of technologies and libraries. Below is a b
 - **TensorFlow:** An open-source software library for machine learning, used for the CNN model in our project.
 - **Keras:** A deep learning API written in Python, running on top of the machine learning platform TensorFlow.
 - **Docker:** A set of platform-as-a-service products that use OS-level virtualization to deliver software in packages called containers.
+- **Kubernetes:** An open-source platform for automating the deployment, scaling, and management of containerized applications, organizing them into logical units for efficient operation.
 
 ### Data Science and Machine Learning Libraries
 - **NumPy:** A library for the Python programming language, adding support for large, multi-dimensional arrays and matrices.
