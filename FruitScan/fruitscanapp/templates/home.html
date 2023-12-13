@@ -9,8 +9,8 @@ Home
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             {% if is_user_logged_in %}
                 <div class="button-container">
-                    <button type="login" id="homeMyPageBtn" class="btn btn-outline-primary mt-2 mypage-button-position">My page</button>
-                    <button type="login" id="homeLogoutBtn" class="btn btn-outline-primary mt-2 mypage-button-position">Logout</button>
+                    <button type="login" id="homeMyPageBtn" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position"><i class="fas fa-user"></i> My page</button>
+                    <button type="login" id="homeLogoutBtn" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position"><i class="fas fa-sign-out"></i> Logout</button>
                 </div>
                 <script>
                     document.getElementById("homeLogoutBtn").addEventListener("click", function() {
@@ -23,12 +23,17 @@ Home
                 </script>
             {% else %}
                 <div class="button-container">
-                    <button type="login" id="homeAdminBtn" class="btn btn-outline-primary mt-2 mypage-button-position">Admin Log In</button>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position"><i class="fas fa-user-plus"></i>  Sign Up</a>
+                    <button type="login" id="homeLoginBtn" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position"><i class="fas fa-sign-in"></i>  Log In</button>
+                    <button type="login" id="homeAdminBtn" class="btn btn-outline-primary me-md-1 mt-2 mypage-button-position" style="width: 150px;"><i class="fas fa-sign-in"></i> Admin Log In</button>
                 </div>
                 <script>
-                //        document.getElementById("homeAdminBtn").addEventListener("click", function() {
-                //        window.location.href = "{% url 'admin_view' %}";
-                //    });
+                    document.getElementById('homeAdminBtn').addEventListener('click', function() {
+                        window.location.href = '/custom_admin';
+                    });
+                    document.getElementById("homeLoginBtn").addEventListener("click", function() {
+                        window.location.href = "{% url 'login' %}";
+                    });
                 </script>
             {% endif %}
         </div>
@@ -36,9 +41,7 @@ Home
             <div class="col-sm-5 container-1">
                 <div class="welcome-text">
                     <p>
-                        Welcome to FruitScan. Here you can upload an image of a fruit and we will recognize it.
-                    </p>
-                    <p>
+                        Welcome to Fruit Scan. Here you can upload an image of a fruit and we will recognize it.<br>
                         As a result you get the name of the fruit and some nutritional values.
                     </p>
                 </div>
@@ -50,26 +53,10 @@ Home
                         <label for="{{ form.image.id_for_label }}">Upload Image:</label>
                         {{ form.image }}
                     </div>
-                    <div class="button-container">
-                        <button type="submit" class="btn btn-outline-primary btn-lg mb-3 mt-3 ">Predict</button>
+                    <div class="button-container" style="padding-left: 40px;">
+                        <button type="submit" class="btn btn-outline-primary btn-lg mb-3 mt-3">Predict</button>
                     </div>
                 </form></br>
-                {% if is_user_logged_in %}
-                {% else %}
-                    <div class="text">
-                        <p> OR </p>
-                    </div>
-                    <div class="d-grid gap-2 col-2 mx-auto">
-                        <div class="button-container">
-                            <button type="login" id="homeLoginBtn" class="btn btn-outline-primary btn-lg">Log In</button>
-                        </div>
-                    </div>
-                    <script>
-                        document.getElementById("homeLoginBtn").addEventListener("click", function() {
-                            window.location.href = "{% url 'login' %}";
-                        });
-                    </script>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -80,7 +67,7 @@ body {
     background-image: url('{% static 'images/minimalist.jpg' %}');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat;op
 }
 
 .text {
@@ -103,7 +90,7 @@ body {
 .container-1 {
     padding-top: 150px;
     padding-bottom: 20px;
-    padding-left: 100px;
+    padding-left: 120px;
 }
 
 .form-border {
@@ -112,7 +99,7 @@ body {
     padding-bottom: 1px;
     width: 55%;
     margin: 0 auto;
-    padding-left: 52px; 
+    padding-left: 20px; 
     padding-right: 0px;
     border-radius: 10px; 
     background-color: #4CAF50;
@@ -125,7 +112,7 @@ body {
 }
 
 .button-container .btn.btn-outline-primary {
-    width: 140px;
+    width: 130px;
     background-color: white;
     color: black; 
     border-color: black; 

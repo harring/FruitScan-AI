@@ -33,12 +33,22 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from sklearn.metrics import classification_report, accuracy_score
 
+import matplotlib.pyplot as plt
+import matplotlib.cm as c_map
+import lime
+from lime import lime_image
+from lime import submodular_pick
+from skimage.segmentation import mark_boundaries
+from skimage.color import label2rgb
 
 deployed_model_version = '1'
 width = 256
 height = 256
 channels = 3
 num_classes = 4
+processed_image = None
+prediction = None
+predicted_class_label = None
 
 # Create model architecture
 model = Sequential([
@@ -51,11 +61,6 @@ model = Sequential([
     #Dropout(0.5),
     Dense(num_classes, activation='softmax')
 ])
-
-# Load the Keras model
-# deployed_weights_path = f"/media/ModelWeights/fruitscan_model_weights_v{deployed_model_version}.h5"
-# weights_path = os.path.join(BASE_DIR, deployed_weights_path)
-# model.load_weights(weights_path)
 
 # Classification table for the model output
 class_labels = ['Kiwi', 'Banana', 'Mango', 'Tomato']
@@ -105,6 +110,7 @@ def home(request):
         form = ImageForm()
     return render(request, 'home.html', {'form': form, 'is_user_logged_in': is_user_logged_in})   
 
+@login_required(login_url='/custom_admin/')
 def adminPanel(request):
     weights = ModelWeights.objects.all()
     model_version = deployed_model_version
@@ -138,6 +144,7 @@ def image_to_base64(img):
 
 # Function that runs the prediction
 def classify_image(uploaded_image):
+    global processed_image, prediction, predicted_class_label
     processed_image = preprocess_image(uploaded_image)
     
     # Reshape processed image
@@ -160,12 +167,48 @@ def classify_image(uploaded_image):
     
     return predicted_class_label, fruit_nutritional_info
 
-# This function can be used to display the history of the images uploaded by the user. But it should to be modified.
-def display_all_uploaded_image(request):
-    if request.method == 'GET':
-        #getting all the objects of the image
-        images = UploadedImage.objects.all()
-        return render(request, 'uploaded_image.html', {'uploaded_image': images})
+def explainability(request):
+    is_user_logged_in = request.user.is_authenticated
+    # Pair each label with its corresponding prediction confidence
+    label_with_confidence = list(zip(class_labels, prediction[0]))
+    result = predicted_class_label
+    sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
+
+    # Create Lime explainability
+    explainer = lime_image.LimeImageExplainer()
+    exp = explainer.explain_instance(processed_image, model.predict, top_labels=4, hide_color=0, num_samples=1000)
+    print(exp.segments)
+    
+    # Plot of super pixels
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
+    img_with_mask = label2rgb(mask, processed_image, bg_label=0)
+    fig, ax = plt.subplots()
+    ax.imshow(img_with_mask)
+    img_super_pixel = explain_image_covert(fig, ax)
+    
+    # Plot of the heatmap
+    dict_heatmap = dict(exp.local_exp[exp.top_labels[0]])
+    heatmap = np.vectorize(dict_heatmap.get)(exp.segments)
+    fig_2, ax_2 = plt.subplots()
+    cax = ax_2.imshow(heatmap, cmap='RdBu', vmin=-heatmap.max(), vmax=heatmap.max())
+    plt.colorbar(cax)
+    ax_2.set_facecolor('none')   
+    img_heatmap = explain_image_covert(fig_2, ax_2)   
+    
+    return render(request, 'explainability.html', {'result': result, 'img_super_pixel': img_super_pixel, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+
+# Save the explainability plot to a buffer 
+def explain_image_covert(fig, ax):
+    ax.axis('off')
+    fig.patch.set_facecolor('none')
+    fig.patch.set_edgecolor('none')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.close(fig)
+    buf.seek(0)
+    # Convert buffer contents to base64
+    img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    return img_base64
 
 def train_model_view(request):
     # Call your model training function here
