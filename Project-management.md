@@ -49,8 +49,24 @@
 | Admin get model evaluation | Erik, Jonathan | Yes | Yes | Admins can get performance data on chosen model |
 | Admin panel design and error handling | Erik, Jonathan | Yes | Yes | Various improvements to the admin panel |
 | Remove title from uploaded image | Patricia | Yes | Yes | Change the model and the form so we sabe only the image in the database. |
-| Django user panel | Patricia | Yes | Yes | Modified the front-end to match the mock-up sketch |
+| Django user panel | Patricia | Yes | Yes | Modified the front-end to match the mock-up sketch | - |
 | Delete uploaded image after prediction if not logged in | Patricia | Yes | Yes | Delete the image from the database and the media folder. Created a code that clean all the images from the database as well.|
-| Resize uploaded image to same size to display in the prediction page | Patricia | Yes | Yes | |
-| Add fruit nutritional information | Patricia | Yes | Yes |  |
-| Improvements on user GUI | Patricia | Yes | Yes | Add style to all front-end pages, background, logo.|| 
+| Resize uploaded image to same size to display in the prediction page | Patricia | Yes | Yes | - |
+| Add fruit nutritional information | Patricia | Yes | Yes | - |
+| Improvements on user GUI | Patricia | Yes | Yes | Add style to all front-end pages, background, logo.| - | 
+
+| Week 5 (Week 49)                       |                     |              |              |                    |
+|----------------------------------------|---------------------|--------------|--------------|--------------------|
+|                                        | Who was responsible |  Delivered   |  Integrated  |  Notes             |
+| Migrate to GitHub | All | Yes|Yes| Manually migrate whole project to GitHub due to Chalmers IT problems with GitLab|
+| Finalize dockerization | Mijin | Yes | Yes | - |
+| Update section 1, 2 in the report | Mijin | Yes | Yes | - |
+| Create unit test | Mijin, Erik | Yes| Yes | Integrated with git action pipeline |
+| Add git action pipeline | Erik | Yes | Yes | To allow for k8 deployment and unit testing |
+| Deployment with kubernetes and Google Cloud | Erik, Jonathan | Yes | No |  Deployed K8 branch to google cloud kubernetes cluster|
+|Reroute different admin related things  | Jonathan |Yes|Yes|-|
+|Protect the admin panel from not authorised users|Jonathan|Yes|Yes|-|
+|Create explainability GUI and style|Patricia|Yes|Yes|Also styled the buttons in all user pages|
+|Create explainability plots using LIME|Patricia|Yes|Yes|-|
+|Show percentage of predictions in the explainability page and text for limitations|Patricia|Yes|Yes|-|
+|Add spinning thing for loading in the explainability |Patricia|Yes|Yes|-|
