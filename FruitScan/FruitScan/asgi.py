@@ -7,10 +7,13 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
+# Import relevant packages
 import os
-
 from django.core.asgi import get_asgi_application
 
+# Set environment variable
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FruitScan.settings')
 
+# Creating an ASGI (Asynchronous Server Gateway Interface) application object 
+# for the Django project.
 application = get_asgi_application()
