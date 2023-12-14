@@ -1,9 +1,11 @@
+# Import necessary packages
 from django.test import TestCase
-from .models import CustomUser, FruitClassification, ImageData, TestImageData, UploadedImage, UserImage, user_directory_path
+from .models import CustomUser, ImageData, TestImageData, UploadedImage, UserImage, user_directory_path
 from django.urls import reverse
 
 
 class ImageDataTestCase(TestCase):
+    """ Test related to image data"""
     def setUp(self):
         # Example image data (bytes)
         example_image_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR...'
@@ -22,6 +24,7 @@ class ImageDataTestCase(TestCase):
         self.assertTrue(image_data_instance.image_data.startswith(b'\x89PNG'))
 
 class UploadedImageTestCase(TestCase):
+    """ Test related to uploaded image files """
     def setUp(self):
         # Create an UploadedImage instance and save it
         self.image = UploadedImage.objects.create(image="image.jpg")
@@ -38,6 +41,7 @@ class UploadedImageTestCase(TestCase):
 
 
 class TestImageDataTestCase(TestCase):
+    """ Test related to image data for test """
     def setUp(self):
         # Example image data (bytes)
         example_image_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR...'
@@ -66,12 +70,14 @@ class TestImageDataTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 class CustomUserTestCase(TestCase):
+    """ Test creation of custom user instance """
     def test_custom_user_str(self):
         # Check the string representation of a CustomUser object
         user = CustomUser.objects.create(username='testuser')
         self.assertEqual(str(user), 'testuser')
 
 class UserImageTestCase(TestCase):
+    """ Test images uploaded by user together with its prediction result """
     def setUp(self):
         # Create a CustomUser instance
         self.user = CustomUser.objects.create(username='testuser')
@@ -97,6 +103,7 @@ class UserImageTestCase(TestCase):
         self.assertEqual(image_instance.pred, "prediction")
 
 class AuthenticationTests(TestCase):
+    """ Test user authentication; i.e. login, logout and conditional display of restricted view """
     def test_user_login(self):
         # Log in the user
         response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'testpassword'})
@@ -109,10 +116,10 @@ class AuthenticationTests(TestCase):
         self.client.login(username='testuser', password='testpassword')
 
         # Log out the user
-        response = self.client.get(reverse('logout'))
+        response = self.client.get(reverse('user_logout'))
 
-        # Check if the logout was successful
-        self.assertEqual(response.status_code, 200)
+        # Check if the logout was successful with a redirect (status code 302)
+        self.assertEqual(response.status_code, 302)
        
     def test_non_logged_in_user_access_restricted_view(self):
         # Access a view that requires authentication
