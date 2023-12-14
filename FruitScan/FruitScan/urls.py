@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+# Import relevant packages
 from django.contrib import admin
 from fruitscanapp.admin import admin_site
 from django.urls import path, include
@@ -21,6 +23,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
+# Define url patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     # This is a path to the admin login which then redirects us to our custom admin panel
@@ -31,5 +34,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
 ]
 
+# Define url patterns in production mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
