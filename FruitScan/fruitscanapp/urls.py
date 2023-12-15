@@ -1,8 +1,10 @@
+# Import necessary packages
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .views import register, user_logout, CustomLoginView
 
+# Define url patterns and views to display
 urlpatterns = [
     path("", views.home, name="home"),
     path("admin_view", views.adminPanel, name="admin_view"),
