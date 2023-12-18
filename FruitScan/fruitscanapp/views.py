@@ -175,6 +175,13 @@ def explainability(request):
     label_with_confidence = list(zip(class_labels, prediction[0]))
     result = predicted_class_label
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
+    
+    # Format the prediction result to percentage to display on the page
+    list_of_labels = []
+    for labels, confidense in sorted_labels:
+        updated_tuple = (labels, confidense * 100)
+        list_of_labels.append(updated_tuple)
+        print("list of labels: ", list_of_labels)
 
     # Create Lime explainability
     explainer = lime_image.LimeImageExplainer()
@@ -196,7 +203,7 @@ def explainability(request):
     ax_2.set_facecolor('none')   
     img_heatmap = explain_image_covert(fig_2, ax_2)   
     
-    return render(request, 'explainability.html', {'result': result, 'img_super_pixel': img_super_pixel, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+    return render(request, 'explainability.html', {'result': result, 'img_super_pixel': img_super_pixel, 'img_heatmap': img_heatmap, 'sorted_labels': list_of_labels, 'is_user_logged_in': is_user_logged_in})
 
 def explain_image_covert(fig, ax):
     """ Save the explainability plot to a buffer """
