@@ -13,7 +13,7 @@
 | Create team contract                   | All                 | Yes          | -            | -                  |
 | Create toy model                       | All                 | Yes          | -            | -                  |
 | Finalize Assignment 1 for submission   | All                 | Yes          | -            | -                  |
-| Research Django/SQLite                 | All                 |              |              |                    |
+| Research Django/SQLite                 | All                 | Yes             | -             |   -                 |
 
 | Week 3 (Week 47)                       |                     |              |              |                    |
 |----------------------------------------|---------------------|--------------|--------------|--------------------|
