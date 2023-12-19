@@ -68,6 +68,20 @@ Below are some screenshots illustrating key features of our application:
 `docker-compose up`
 
 
+For local deployment this includes one admin account and one user account.
+
+Admin account:
+
+`Username: admin`
+
+`Password: fruitscan123`
+
+User account:
+
+`Username: paty`
+
+`Password: Fruitscan123`
+
 ### Connecting to Kubernetes Cluster
 When deploying to Kubernetes make sure to run the branch cloud-deployment. To connect to the Kubernetes cluster:
 
