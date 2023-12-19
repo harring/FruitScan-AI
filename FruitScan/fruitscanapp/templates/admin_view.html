@@ -67,7 +67,7 @@
                     {% csrf_token %}             
                     <h6>Select Model:</h6>
                     <select name="selected_version" required>
-                        <option value='1'>Reset to </option>
+                        <option value='1'>Deploy version </option>
                         {% for weight in weights %}
                         <option value="{{ weight.version }}">{{ weight.version }}</option>
                         {% endfor %}
@@ -82,7 +82,7 @@
                     {% csrf_token %}             
                     <h6>Select Model:</h6>
                     <select name="test_version" required>
-                        <option value='1'>Version</option>
+                        <option value='1'>Select version</option>
                         {% for weight in weights %}
                         <option value="{{ weight.version }}">{{ weight.version }}</option>
                         {% endfor %}
