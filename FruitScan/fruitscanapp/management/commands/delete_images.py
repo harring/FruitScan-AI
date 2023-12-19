@@ -1,3 +1,5 @@
+#Contributors: Patricia
+
 # Import necessary packages
 from django.core.management.base import BaseCommand
 from fruitscanapp.models import UploadedImage  

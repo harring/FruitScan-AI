@@ -1,3 +1,5 @@
+#Contributors: Erik, Patricia, Jonathan
+
 # Import necessary packages
 from django.core.management.base import BaseCommand
 from fruitscanapp.models import FruitClassification, MLWeights, ModelWeights

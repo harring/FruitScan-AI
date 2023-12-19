@@ -1,3 +1,5 @@
+# Contributors: Mijin, Patricia
+
 # Import necessary packages
 from django import forms
 from .models import UploadedImage

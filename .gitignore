@@ -1,3 +1,5 @@
+#Contributors: Erik, Mijin, Patricia, Jonathan
+
 # Ignore IPython Notebook checkpoint files
 **/*.ipynb_checkpoints/
 /archive

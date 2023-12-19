@@ -1,3 +1,5 @@
+#Contributors: Erik, Mijin, Patricia, Jonathan
+
 """
 Django settings for FruitScan project.
 
