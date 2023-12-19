@@ -82,6 +82,14 @@ nutritional_info = {
 def resize_image(uploaded_file, size):
     """ Resize images uploaded by user to easily maintain them in DB """
     image = Image.open(uploaded_file)
+
+    # Convert RGBA to RGB
+    if image.mode == 'RGBA':
+        # Create an RGB image with a white background
+        rgb_image = Image.new("RGB", image.size, (255, 255, 255))
+        rgb_image.paste(image, mask=image.split()[3])  # Paste using alpha channel as mask
+        image = rgb_image
+
     image.thumbnail(size)
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
@@ -133,6 +141,13 @@ class CustomAdminLoginView(LoginView):
 def preprocess_image(uploaded_image):
     """ Process the uploaded image and resize to fit the model """
     with Image.open(uploaded_image) as img:
+        # Check if image has an alpha channel (transparency)
+        if img.mode == 'RGBA':
+            # Create an RGB image with a white background
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])  # Paste using alpha channel as mask
+            img = background
+
         img_data = img.resize((width, height))
         # Normalize data
         img_array = np.array(img_data) / 255.0
@@ -141,6 +156,12 @@ def preprocess_image(uploaded_image):
 def image_to_base64(img):
     """ Convert uploaded image to Base64 format and send it to the front-end. 
         The image stays in the memory of the client's browser, not on the server. """
+    # Convert RGBA to RGB if necessary
+    if img.mode == 'RGBA':
+        rgb_image = Image.new("RGB", img.size, (255, 255, 255))
+        rgb_image.paste(img, mask=img.split()[3])  # Paste using alpha channel as mask
+        img = rgb_image
+
     buffered = BytesIO()
     img.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
