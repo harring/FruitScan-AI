@@ -24,19 +24,19 @@ Below are some screenshots illustrating key features of our application:
 
 
 ### Administrator Menu
-<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/adminpanel.png" width="300">
 
 
 *This screenshot displays the administrator menu, showcasing the backend control features available to administrators. Administrators can add/remove images to the training and test sets. They can also evaluate and deploy different model versions.*
 
 ### Fruit Prediction Page
-<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/predictionpage.png" width="300">
 
 
 *Here, you can see a sample page where a fruit is predicted by our CNN model.*
 
 ### Explainability Feature
-<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/Banana.jpg" width="300">
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/explainabilitypage.png" width="300">
 
 
 *This image illustrates the explainability aspect of our application, detailing how the CNN model arrives at its predictions.*
