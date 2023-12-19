@@ -20,11 +20,20 @@
                 <div class="password-group"><br>
                     <label for="{{ form.password1.id_for_label }}">Password:</label>
                     {{ form.password1 }}
-                    <br><small class="form-text text-muted">
-                        * Password must be at least 8 characters long <br>
-                        and contain at least one uppercase letter, one lowercase letter, and one digit.
-                    </small>
-                </div>
+                    <p class="d-inline-flex gap-1">
+                        <a class="btn btn-danger" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            ?
+                        </a>
+                      </p>
+                      <div class="collapse" id="collapseExample">
+                        <div class="card card-body alert alert-danger" style="text-align: left;">
+                            <strong>Password must be:</strong> <br>                              
+                            - At least 8 characters long <br>
+                            - Contain at least one uppercase letter, one lowercase letter, and one digit. <br>
+                            - Not similar to username and user email <br>
+                        </div>  
+                      </div>
+                    </div>
             
                 <div class="password2-group"><br>
                     <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
@@ -59,14 +68,14 @@ body {
 
 .password-group {
     text-align: center; 
-    padding-left: 90px; 
+    padding-left: 125px; 
     padding-right: 85px;
 }
 
 .password2-group {
     text-align: center; 
     padding-left: 0px; 
-    padding-right: 50px;
+    padding-right: 55px;
 }
 
 .register-text {

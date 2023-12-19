@@ -58,7 +58,7 @@ Explainability result
                                     {% for label, confidence in sorted_labels %}
                                     <tr>
                                         <td>{{ label }}</td>
-                                        <td>{{ confidence|floatformat:3 }} %</td>
+                                        <td>{{ confidence|floatformat:1 }} %</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

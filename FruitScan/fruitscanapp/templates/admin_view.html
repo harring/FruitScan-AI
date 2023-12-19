@@ -4,92 +4,99 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Panel</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <style>
-            .container-top-margin {
-                margin-top: 20px;
-            }
-                .all-models-top-margin {
-                margin-top: 20px;
-            }
-        </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </head>
 <body>
 
     <div class="container-fluid container-top-margin">
         <div class="row">
+            <div class="col-md-12">                
+                <h4 style="font-weight: bold; text-align: center;" class="mb-3">Currently Deployed Model: v.{{ model_version }}</h4>
+            </div>            
         <!-- Top Left: File Upload and Related Actions -->
-        <div class="col-md-4">
-            <h4 4 style="font-weight: bold">Upload new batch of training data</h4>
-            <p>Currently {{ fruitscanapp_imagedata_count }} images in the database.</p>
-            <form method="post" action="/upload_zip" enctype="multipart/form-data">
-                <!--Checks for malicious files when uploading-->
-                {% csrf_token %}
-                <input type="file" name="zip_file" accept=".zip" required>
-                <br>
-                <button type="submit" class="mt-3" style="cursor: pointer;">Upload to dataset</button>
-            </form>
-            <form action="{% url 'delete_all_images' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="mt-3" style="cursor: pointer;">Delete All Images</button>
-            </form>
-            <form action="/train_model" method="get">
-                <button type="submit" class="mt-3 mb-3" style="cursor: pointer;">Train New Model</button>
-            </form>
-            <h4 4 style="font-weight: bold">Upload new batch of test data</h4>
+        <div class="col-md-5">
+            <div class="data-section">
+                <h4 4 style="font-weight: bold">Upload new batch of training data</h4>
+                <p>Currently {{ fruitscanapp_imagedata_count }} images in the database.</p>
+                <form method="post" action="/upload_zip" enctype="multipart/form-data">
+                    <!--Checks for malicious files when uploading-->
+                    {% csrf_token %}
+                    <input type="file" name="zip_file" accept=".zip" required>
+                    <br>
+                    <button id="upload_to_dataset" type="submit" class="button mt-3" style="cursor: pointer;">Upload to dataset</button>
+                </form>
+                <form action="{% url 'delete_all_images' %}" method="post">
+                    {% csrf_token %}
+                    <button id="delete_images" type="submit" class="button mt-3" style="cursor: pointer;">Delete All Images</button>
+                </form>
+                <form action="{% url 'train_model_view' %}" method="post">
+                    {% csrf_token %}
+                    {% if fruitscanapp_imagedata_count > 100 %}
+                    <button id="train_new_model" type="submit" class="button mt-3 mb-3">Train New Model</button>
+                    {% else %}
+                    <button type="submit" class="mt-3 mb-3" disabled>Train New Model</button>
+                    {% endif %}
+                </form>
+            </div>    
+            <div class="data-section">
+                <h4 4 style="font-weight: bold">Upload new batch of test data</h4>
 
-            <p>Currently {{ fruitscanapp_test_image_count }} images in the test set.</p>
-            <form method="post" action="/upload_test_set" enctype="multipart/form-data">
-                <!--Checks for malicious files when uploading-->
-                {% csrf_token %}
-                <input type="file" name="zip_file" accept=".zip" required>
-                <br>
-                <button type="submit" class="mt-3" style="cursor: pointer;">Upload test set</button>
-            </form>
-            <form action="{% url 'delete_test_set' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="mt-3" style="cursor: pointer;">Delete All Test Images</button>
-            </form>
+                <p>Currently {{ fruitscanapp_test_image_count }} images in the test set.</p>
+                <form method="post" action="/upload_test_set" enctype="multipart/form-data">
+                    <!--Checks for malicious files when uploading-->
+                    {% csrf_token %}
+                    <input type="file" name="zip_file" accept=".zip" required>
+                    <br>
+                    <button id="upload_test_set" type="submit" class="button mt-3" style="cursor: pointer;">Upload test set</button>
+                </form>
+                <form action="{% url 'delete_test_set' %}" method="post">
+                    {% csrf_token %}
+                    <button id="delete_test_imgs" type="submit" class="button mt-3" style="cursor: pointer;">Delete All Test Images</button>
+                </form>
+            </div>    
         </div>
 
-        <!-- Top Middle: Currently Deployed Model and Logout -->
-        <div class="col-md-4 text-center">
-            <h4 style="font-weight: bold" class="mb-3">Currently Deployed Model: {{ model_version }}</h4>
-            <!-- Logout Button -->
-            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
-        </div>
+        <div class="col-md-5">
 
-        <!-- Top Right: Model Selection and Deployment -->
-        <div class="col-md-4">
-            <h4 style="font-weight: bold">Select and Deploy Model:</h4>
-            <form method="post" action="/deploy_selected" enctype="multipart/form-data">
-                {% csrf_token %}             
-                <h6>Select Model:</h6>
-                <select name="selected_version" required>
-                    <option value='1'>Reset to 1</option>
-                    {% for weight in weights %}
-                    <option value="{{ weight.version }}">{{ weight.version }}</option>
-                    {% endfor %}
-                </select>
-                <br>
-                <button type="submit" name="deploy_selected" value="deploy_selected" class="mt-3 mb-3" style="cursor: pointer;">Deploy selected model</button>
-            </form>
-
-            <h4 style="font-weight: bold">Test model:</h4>
-            <form method="post" action="/test_deployed_model" enctype="multipart/form-data">
-                {% csrf_token %}             
-                <h6>Select Model:</h6>
-                <select name="test_version" required>
-                    <option value='1'>Version 1</option>
-                    {% for weight in weights %}
-                    <option value="{{ weight.version }}">{{ weight.version }}</option>
-                    {% endfor %}
-                </select>
-                <br>
-                <br>
-                <button type="submit" name="test_deployed_model" value="test_deployed_model" class="mt-3" style="cursor: pointer;">Test Selected Model</button>
-            </form>
+            <div class="data-section">
+                <form method="post" action="/deploy_selected" enctype="multipart/form-data">
+                    <h4 style="font-weight: bold">Select and Deploy Model:</h4>
+                    {% csrf_token %}             
+                    <h6>Select Model:</h6>
+                    <select name="selected_version" required>
+                        <option value='1'>Reset to 1</option>
+                        {% for weight in weights %}
+                        <option value="{{ weight.version }}">{{ weight.version }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <button type="submit" name="deploy_selected" value="deploy_selected" class="button mt-3 mb-3" style="cursor: pointer;">Deploy selected model</button>
+                </form>
+            </div>
+            <div class="data-section">
+                <h4 style="font-weight: bold">Test model:</h4>
+                <form method="post" action="/test_deployed_model" enctype="multipart/form-data">
+                    {% csrf_token %}             
+                    <h6>Select Model:</h6>
+                    <select name="test_version" required>
+                        <option value='1'>Version 1</option>
+                        {% for weight in weights %}
+                        <option value="{{ weight.version }}">{{ weight.version }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+                    <button id="test_model" type="submit" name="test_deployed_model" value="test_deployed_model" class="button mt-3" style="cursor: pointer;">Test Selected Model</button>
+                </form>
+            </div>
         </div>
+        <div class="col-md-2 text-center">
+            <a href="{% url 'home' %}" class="btn btn-primary">Startpage</a> <br>
+            <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Logout</a>
+        </div>        
     </div>
 
     <!-- Full Width: Table of All Models -->
@@ -122,11 +129,100 @@
             </table>
         </div>
     </div>
+    <div id="overlay" class="overlay"></div> 
+    <div id="loadingSpinner" class="spinner-border spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <script>
+        document.getElementById("upload_to_dataset").addEventListener("click", function(event) {
+            var fileInput = this.form.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                //Do nothing
+            } else {
+                document.getElementById("loadingSpinner").style.display = 'block';
+                document.getElementById("overlay").style.display = 'block';
+            }
+        });
+        document.getElementById("delete_images").addEventListener("click", function() {
+            document.getElementById("loadingSpinner").style.display = 'block';
+            document.getElementById("overlay").style.display = 'block';
+        });
+        document.getElementById("train_new_model").addEventListener("click", function() {
+            document.getElementById("loadingSpinner").style.display = 'block';
+            document.getElementById("overlay").style.display = 'block';
+        });   
+        document.getElementById("upload_test_set").addEventListener("click", function(event) {
+            var fileInput = this.form.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                //Do nothing
+            } else {
+                document.getElementById("loadingSpinner").style.display = 'block';
+                document.getElementById("overlay").style.display = 'block';
+            }
+        });
+        document.getElementById("delete_test_imgs").addEventListener("click", function() {
+            document.getElementById("loadingSpinner").style.display = 'block';
+            document.getElementById("overlay").style.display = 'block';
+        });
+        document.getElementById("test_model").addEventListener("click", function() {
+            document.getElementById("loadingSpinner").style.display = 'block';
+            document.getElementById("overlay").style.display = 'block';
+        });
+    </script>
 </div>
+<style>
+    .container-top-margin {
+        margin-top: 20px;
+    }
+        .all-models-top-margin {
+        margin-top: 20px;
+    }
+        .data-section {
+        border: 1px solid #ccc;
+        background-color: #f8f8f8;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .data-section-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    .spinner {
+        display: none;
+        width: 6rem;
+        height: 6rem;
+        top: 35%; 
+        left: 50%;
+        position: fixed; 
+        z-index: 1000;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        z-index: 999; /* Ensure it's below the spinner */
+    }
+
+    .button {
+        background-color: white;
+        color: black; 
+        border-color: black; 
+    }
+    
+    /* Hover state styling */
+    .button:hover {
+        color: black; 
+        background-color: #C0C0C0; 
+        border-color: black; 
+    }
+
+</style>
 
 </body>
 </html>

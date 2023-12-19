@@ -1,4 +1,4 @@
-# yourapp/management/commands/add_data.py
+# Import necessary packages
 from django.core.management.base import BaseCommand
 from fruitscanapp.models import FruitClassification, MLWeights, ModelWeights
 
@@ -20,7 +20,9 @@ class Command(BaseCommand):
         )
         weights_instance.save()
 
+        # Fetch model weights and save the result
         model_weights = ModelWeights(version="1", path='ModelWeights/fruitscan_model_weights_v1.h5')
         model_weights.save()
 
+        # Inform user about the successful operation
         self.stdout.write(self.style.SUCCESS('Sample data added successfully'))

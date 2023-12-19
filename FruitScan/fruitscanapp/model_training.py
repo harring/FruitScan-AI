@@ -1,5 +1,5 @@
+# Import necessary packages
 from django.conf import settings
-import cv2
 import os
 import numpy as np
 from PIL import Image
@@ -17,10 +17,13 @@ from tqdm import tqdm
 import matplotlib
 from .models import ImageData, ModelWeights
 
+# Add relevant configuration
+# Configuration setting for the Matplotlib library in Python for rendering plots
 matplotlib.use('Agg') 
 
 
 def save_model(model):
+    """ Save a model weights at predefined path following naming convention """
     base_folder = "media/ModelWeights"
     base_filename = "fruitscan_model_weights_v"
     version = 1
@@ -45,7 +48,9 @@ def save_model(model):
     return version
 
 def train_model():
-    # Variables for image
+    """ Take new image data, make conversion of the data and train model with them.
+    This provide model performance matrices and save the trained model in DB. """
+    # Local variables for image
     width = 256
     height = 256
     channels = 3
@@ -60,8 +65,10 @@ def train_model():
     # First, count the total number of images
     total_images = image_objects.count()
 
+    # Provide a visual representation of the progress
     progress_bar = tqdm(total=total_images, desc="Loading Images", unit="image")
     
+    # Resize, vectorize and normalized the image
     for image_obj in image_objects:
         img_data = BytesIO(image_obj.image_data)
         img = Image.open(img_data)
@@ -71,10 +78,10 @@ def train_model():
             img = img.astype(np.float32) / 255.0  # Normalization step
             images.append(img)
             labels.append(image_obj.label)
-
         progress_bar.update(1)
     progress_bar.close()
 
+    # Encoding categorical labels into numerical values
     label_encoder = LabelEncoder()
     labels = label_encoder.fit_transform(labels)
 
@@ -87,7 +94,7 @@ def train_model():
         images, labels, test_size=0.2, stratify=labels, random_state=8
     )
 
-    # Create model
+    # Create CNN model
     model = Sequential([
         Conv2D(32, (3, 3), activation='relu', input_shape=(width, height, channels)),
         MaxPooling2D(2, 2),
@@ -154,13 +161,13 @@ def train_model():
         show_layer_activations=True,
         show_trainable=False,
     )
+    # Inform user about the operation result
     print("Model plotted.")
     print("Model trained successfully.")
     
     # Add model and files connected to model in DB
     model_path = f"ModelWeights/fruitscan_model_weights_v{model_version}.h5"
     confusion_matrix_path = f"Performance/ConfusionMatrix/confusion_matrix_v{model_version}.png"
-
     new_db_entry = ModelWeights(version=model_version, path=model_path, confusion_matrix=confusion_matrix_path, train_accuracy= training_accuracy_float, val_accuracy=validation_accuracy_float)
     new_db_entry.save()
     print(f'Model {model_version} added to database.')
