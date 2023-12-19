@@ -2,7 +2,7 @@
 
 ## Overview
 FruitScan is a web-application that predicts which fruit is in an image and provides the user with nutritional information about that fruit. This allows the user to learn about fruits and make educated choices when eating healthy.
-This project uses a Convolutional Neural Network (CNN) implemented in Django. It currently supports identification of kiwi, mango, banana, and tomato, with the capability to extend to more fruits. 
+This project uses a Convolutional Neural Network (CNN) implemented in the Django framework. It currently supports identification of kiwi, mango, banana, and tomato, with the capability to extend to more fruits. 
 
 ## Features
 - CNN for fruit prediction.
@@ -15,7 +15,7 @@ This project uses a Convolutional Neural Network (CNN) implemented in Django. It
 
 This project was developed as a part of the course "DIT826 H23 Software Engineering for Data-Intensive AI Applications" at the University of Gothenburg. As the course has concluded, the development of this project has also reached its completion. Therefore, the project is currently in a maintenance phase and will not be actively developed further. However, the codebase remains available for educational purposes, future reference, and community use.
 
-## Screenshots
+## Visual illustration of the application
 
 Below are some screenshots illustrating key features of our application:
 
@@ -23,7 +23,7 @@ Below are some screenshots illustrating key features of our application:
 <img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/FruitScan_logo.png?raw=true" width="300">
 
 
-### Administrator Menu
+### Administrator Page
 <img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/adminpanel.png" width="300">
 
 
@@ -98,8 +98,8 @@ When deploying to Kubernetes make sure to run the branch cloud-deployment branch
 `kubectl delete pods -l app=web`
 
 - **To update deployment configuration:**
-- Navigate to the `deployment.yaml` file directory.
-- Apply the new configuration:
+  - Navigate to the `deployment.yaml` file directory.
+  - Apply the new configuration:
   `kubectl apply -f deployment.yaml`
 
 ## Tech Stack
@@ -120,11 +120,9 @@ Our project leverages a robust stack of technologies and libraries. Below is a b
 - **Matplotlib** and **Seaborn:** Libraries for creating static, interactive, and animated visualizations in Python.
 
 ### Web Development Libraries
-- **Flask:** A micro web framework written in Python.
 - **Jinja2:** A modern and designer-friendly templating language for Python, modeled after Django’s templates.
 
 ### Other Key Libraries
-- **opencv-python:** A library of Python bindings designed to solve computer vision problems.
 - **Pillow:** The Python Imaging Library adds image processing capabilities to your Python interpreter.
 - **Requests:** An elegant and simple HTTP library for Python.
 - **h5py:** A Pythonic interface to the HDF5 binary data format.
