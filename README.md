@@ -69,7 +69,7 @@ Below are some screenshots illustrating key features of our application:
 
 
 ### Connecting to Kubernetes Cluster
-When deploying to Kubernetes make sure to run the branch cloud-deployment branch. To connect to the Kubernetes cluster:
+When deploying to Kubernetes make sure to run the branch cloud-deployment. To connect to the Kubernetes cluster:
 
 1. **Install kubectl:** 
 - Follow the instructions at [Kubernetes kubectl](https://kubernetes.io/docs/tasks/tools/).
