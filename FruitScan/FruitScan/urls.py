@@ -1,3 +1,5 @@
+#Contributors: Erik, Mijin, Patricia, Jonathan
+
 """
 URL configuration for FruitScan project.
 

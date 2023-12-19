@@ -1,3 +1,5 @@
+# Contributors: Mijin, Jonathan, Patricia, Erik
+
 # Import necessary packages
 from django.conf import settings
 import os

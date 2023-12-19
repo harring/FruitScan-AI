@@ -1,3 +1,5 @@
+# Contributors: Mijin, Jonathan, Patricia, Erik
+
 # Import necessary packages
 from django.db import models
 from django.db.models import JSONField
