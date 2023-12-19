@@ -1,3 +1,5 @@
+# Contributors: Mijin, Jonathan, Patricia, Erik
+
 # Import necessary packages
 from django.urls import path
 from django.contrib.auth import views as auth_views

@@ -1,3 +1,5 @@
+# Contributors: Mijin, Jonathan, Patricia, Erik
+
 # Import necessary packages
 from django.conf import settings
 import os
@@ -130,7 +132,7 @@ def train_model():
 
     # Plot the confusion matrix for the validation set
     plt.figure(figsize=(8, 6))
-    sns.heatmap(conf_matrix_val, annot=True, fmt='g')
+    sns.heatmap(conf_matrix_val, annot=True, fmt='g', xticklabels=['Kiwi', 'Banana', 'Mango', 'Tomato'], yticklabels=['Kiwi', 'Banana', 'Mango', 'Tomato'])
     plt.title('Confusion Matrix (Validation Set)')
     plt.xlabel('Predicted')
     plt.ylabel('True')

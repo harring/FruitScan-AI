@@ -1,3 +1,5 @@
+# Contributors: Patricia
+
 # Import necessary packages
 from django.apps import AppConfig
 

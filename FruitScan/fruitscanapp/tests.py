@@ -1,3 +1,5 @@
+# Contributors: Mijin, Erik
+
 # Import necessary packages
 from django.test import TestCase
 from .models import CustomUser, ImageData, TestImageData, UploadedImage, UserImage, user_directory_path

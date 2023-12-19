@@ -1,3 +1,5 @@
+# Contributors: Mijin, Jonathan, Patricia, Erik
+
 ########## Import necessary packages ##########
 
 # Standard library imports
@@ -82,6 +84,14 @@ nutritional_info = {
 def resize_image(uploaded_file, size):
     """ Resize images uploaded by user to easily maintain them in DB """
     image = Image.open(uploaded_file)
+
+    # Convert RGBA to RGB
+    if image.mode == 'RGBA':
+        # Create an RGB image with a white background
+        rgb_image = Image.new("RGB", image.size, (255, 255, 255))
+        rgb_image.paste(image, mask=image.split()[3])  # Paste using alpha channel as mask
+        image = rgb_image
+
     image.thumbnail(size)
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
@@ -133,6 +143,13 @@ class CustomAdminLoginView(LoginView):
 def preprocess_image(uploaded_image):
     """ Process the uploaded image and resize to fit the model """
     with Image.open(uploaded_image) as img:
+        # Check if image has an alpha channel (transparency)
+        if img.mode == 'RGBA':
+            # Create an RGB image with a white background
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])  # Paste using alpha channel as mask
+            img = background
+
         img_data = img.resize((width, height))
         # Normalize data
         img_array = np.array(img_data) / 255.0
@@ -141,6 +158,12 @@ def preprocess_image(uploaded_image):
 def image_to_base64(img):
     """ Convert uploaded image to Base64 format and send it to the front-end. 
         The image stays in the memory of the client's browser, not on the server. """
+    # Convert RGBA to RGB if necessary
+    if img.mode == 'RGBA':
+        rgb_image = Image.new("RGB", img.size, (255, 255, 255))
+        rgb_image.paste(img, mask=img.split()[3])  # Paste using alpha channel as mask
+        img = rgb_image
+
     buffered = BytesIO()
     img.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
@@ -174,6 +197,13 @@ def explainability(request):
     label_with_confidence = list(zip(class_labels, prediction[0]))
     result = predicted_class_label
     sorted_labels = sorted(label_with_confidence, key=lambda x: x[1], reverse=True)
+    
+    # Format the prediction result to percentage to display on the page
+    list_of_labels = []
+    for labels, confidense in sorted_labels:
+        updated_tuple = (labels, confidense * 100)
+        list_of_labels.append(updated_tuple)
+        print("list of labels: ", list_of_labels)
 
     # Create Lime explainability
     explainer = lime_image.LimeImageExplainer()
@@ -195,7 +225,7 @@ def explainability(request):
     ax_2.set_facecolor('none')   
     img_heatmap = explain_image_covert(fig_2, ax_2)   
     
-    return render(request, 'explainability.html', {'result': result, 'img_super_pixel': img_super_pixel, 'img_heatmap': img_heatmap, 'sorted_labels': sorted_labels, 'is_user_logged_in': is_user_logged_in})
+    return render(request, 'explainability.html', {'result': result, 'img_super_pixel': img_super_pixel, 'img_heatmap': img_heatmap, 'sorted_labels': list_of_labels, 'is_user_logged_in': is_user_logged_in})
 
 def explain_image_covert(fig, ax):
     """ Save the explainability plot to a buffer """
