@@ -70,3 +70,19 @@
 |Create explainability plots using LIME|Patricia|Yes|Yes|-|
 |Show percentage of predictions in the explainability page and text for limitations|Patricia|Yes|Yes|-|
 |Add spinning thing for loading in the explainability |Patricia|Yes|Yes|-|
+
+| Week 6 (Week 50)                       |                     |              |              |                    |
+|----------------------------------------|---------------------|--------------|--------------|--------------------|
+|                                        | Who was responsible |  Delivered   |  Integrated  |  Notes             |
+|Prepare for presentation|All|Yes|Yes|-|
+|Make presentation at the fair|All|Yes|Yes|-|
+|Various improvements to the application|All|Yes|Yes|Testing hyper parameters, admin panel usability, loading indicators|
+|Write assignment 2 report|All|No|No|Work in progress|
+
+| Week 7 (Week 51)                       |                     |              |              |                    |
+|----------------------------------------|---------------------|--------------|--------------|--------------------|
+|                                        | Who was responsible |  Delivered   |  Integrated  |  Notes             |
+|Write assignment 2 report|All|Yes|Yes|-|
+|Record video about cloud deployment|All|Yes|Yes|-|
+|Various improvements to application and repository|All|Yes|Yes|Explainability shows percentage, confusion matrix shows text labels, readme file|
+|Make final submission|All|Yes|Yes|-|
