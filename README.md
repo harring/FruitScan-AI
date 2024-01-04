@@ -24,12 +24,12 @@ Below are some screenshots illustrating key features of our application:
 
 
 ### Home page
-<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/home_page.jpg?" width="300">
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/home_page.jpg" width="300">
 
 *This screenshot displays the home page, where the user can register or sign in to an account, and the administrator log in.* 
 
 ### User page
-<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/my_page.jpg?" width="300">
+<img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/my_page.jpg" width="300">
 
 *This screenshot displays the user page. When logged in the user has the option to revisit the history and results of their predictions.*
 
