@@ -28,6 +28,8 @@ Below are some screenshots illustrating key features of our application:
 
 *This screenshot displays the home page, where the user can register or sign in to an account, and the administrator log in.* 
 
+To upload an image and test the prediction functionality in the home page, there are two example of testing images available in this repository. The images can be found in the path fruitscan-1/testing-images.
+
 ### User page
 <img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/my_page.jpg" width="300">
 
@@ -101,10 +103,6 @@ User account:
 `Username: paty`
 
 `Password: Fruitscan123`
-
-Testing images:
-
-Find some examples of testing images that can be uploaded for predictions in the path fruitscan-1/testing-images.
 
 ### Connecting to Kubernetes Cluster
 When deploying to Kubernetes make sure to run the branch cloud-deployment. To connect to the Kubernetes cluster:
