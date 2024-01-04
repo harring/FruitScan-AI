@@ -39,6 +39,16 @@ Below are some screenshots illustrating key features of our application:
 
 *This screenshot displays the administrator menu, showcasing the backend control features available to administrators. Administrators can add/remove images to the training and test sets. They can also evaluate and deploy different model versions.*
 
+To test the functionality of the administrator page, there are two datasets available in this repository. One is called "Dataset_labelled_images.zip" and the other is called "Dataset_test_set.zip". If you want to train a model you should upload the "Dataset_labelled_images.zip" and train on it. If you want to test your model you can use "Dataset_test_set.zip". You can also make your own dataset which has to be structured in the following way:
+
+- root (zip)
+  - 0
+  - 1
+  - 2
+  - 3
+
+Folder “0”, “1”, “2”, “3” should contain pictures of kiwis, bananas, mangos and tomatoes, respectively.
+
 ### Fruit Prediction Page
 <img src="https://github.com/harring/fruitscan-1/blob/main/FruitScan/fruitscanapp/static/images/predictionpage.png" width="300">
 
