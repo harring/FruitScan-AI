@@ -82,6 +82,10 @@ User account:
 
 `Password: Fruitscan123`
 
+Testing images:
+
+Find some examples of testing images that can be uploaded for predictions in the path fruitscan-1/testing-images.
+
 ### Connecting to Kubernetes Cluster
 When deploying to Kubernetes make sure to run the branch cloud-deployment. To connect to the Kubernetes cluster:
 
